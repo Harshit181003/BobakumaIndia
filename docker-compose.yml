@@ -1,0 +1,14 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: bobakuma-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: bobakuma
+      MYSQL_USER: bobakuma_user
+      MYSQL_PASSWORD: bobakuma_password
+      MYSQL_ROOT_PASSWORD: root_password_change_me
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database/.mysql-data:/var/lib/mysql

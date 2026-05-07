@@ -1,0 +1,6 @@
+---
+pid: 19652
+cwd: |
+  C:\Users\harsh
+---
+PS C:\Users\harsh>
