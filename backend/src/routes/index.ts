@@ -7,6 +7,7 @@ import { reviewsRouter } from "./reviews.routes.js";
 import { ordersRouter } from "./orders.routes.js";
 import { adminRouter } from "./admin.routes.js";
 import { miscRouter } from "./misc.routes.js";
+import { pricingRouter } from "./pricing.routes.js";
 
 export const apiRouter = Router();
 
@@ -16,6 +17,7 @@ apiRouter.get("/", (_req, res) => {
 
 apiRouter.use("/auth", authRouter);
 apiRouter.use("/products", productsRouter);
+apiRouter.use("/pricing", pricingRouter);
 apiRouter.use("/cart", cartRouter);
 apiRouter.use("/wishlist", wishlistRouter);
 apiRouter.use("/reviews", reviewsRouter);

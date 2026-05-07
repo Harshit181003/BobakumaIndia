@@ -1,5 +1,7 @@
 import { pool } from "../db.js";
+import { config } from "../config.js";
 import { effectiveUnitPricePaise } from "../utils/money.js";
+import { type MarketCurrency, priceForMarket, subcontinentPriceCard } from "../utils/pricing.js";
 
 export type ProductRow = {
   id: number;
@@ -28,11 +30,15 @@ export type ProductListFilters = {
   sort?: "newest" | "price_asc" | "price_desc" | "rating";
   page: number;
   pageSize: number;
+  currency?: MarketCurrency;
 };
 
-function mapProductListRow(r: Record<string, unknown>) {
+const fx = () => config.pricing;
+
+function mapProductListRow(r: Record<string, unknown>, currency: MarketCurrency) {
   const pricePaise = Number(r.price_paise);
   const discountPercent = Number(r.discount_percent);
+  const eff = effectiveUnitPricePaise(pricePaise, discountPercent);
   return {
     id: Number(r.id),
     name: String(r.name),
@@ -43,15 +49,18 @@ function mapProductListRow(r: Record<string, unknown>) {
     capacityMl: r.capacity_ml == null ? null : Number(r.capacity_ml),
     pricePaise,
     discountPercent,
-    effectivePricePaise: effectiveUnitPricePaise(pricePaise, discountPercent),
+    effectivePricePaise: eff,
     stockQty: Number(r.stock_qty),
     imageUrl: r.image_url ? String(r.image_url) : null,
     avgRating: r.avg_rating == null ? 0 : Number(r.avg_rating),
-    reviewCount: Number(r.review_count ?? 0)
+    reviewCount: Number(r.review_count ?? 0),
+    displayPrice: priceForMarket(pricePaise, discountPercent, currency, fx()),
+    subcontinent: subcontinentPriceCard(pricePaise, discountPercent, fx())
   };
 }
 
 export async function listProducts(f: ProductListFilters) {
+  const currency = f.currency ?? "INR";
   const offset = (f.page - 1) * f.pageSize;
   const where: string[] = ["p.is_active = 1"];
   const params: unknown[] = [];
@@ -125,14 +134,17 @@ export async function listProducts(f: ProductListFilters) {
   const total = Number((countRows as { total: number }[])[0]?.total ?? 0);
 
   return {
-    items: (rows as Record<string, unknown>[]).map(mapProductListRow),
+    items: (rows as Record<string, unknown>[]).map((row) => mapProductListRow(row, currency)),
     total,
     page: f.page,
-    pageSize: f.pageSize
+    pageSize: f.pageSize,
+    currency,
+    pricingNote:
+      "Prices in NPR/LKR are estimates from INR list + configurable FX/adjusters. Checkout is in INR (Razorpay India)."
   };
 }
 
-export async function getProductBySlug(slug: string) {
+export async function getProductBySlug(slug: string, currency: MarketCurrency = "INR") {
   const [rows] = await pool.query("SELECT * FROM products WHERE slug = ? AND is_active = 1 LIMIT 1", [slug]);
   const p = (rows as ProductRow[])[0];
   if (!p) return null;
@@ -148,6 +160,8 @@ export async function getProductBySlug(slug: string) {
   );
   const agg = (reviewAgg as { avg_rating: number; review_count: number }[])[0];
 
+  const disc = p.discount_percent;
+  const pp = p.price_paise;
   return {
     id: p.id,
     name: p.name,
@@ -157,12 +171,15 @@ export async function getProductBySlug(slug: string) {
     material: p.material,
     color: p.color,
     capacityMl: p.capacity_ml,
-    pricePaise: p.price_paise,
-    discountPercent: p.discount_percent,
-    effectivePricePaise: effectiveUnitPricePaise(p.price_paise, p.discount_percent),
+    pricePaise: pp,
+    discountPercent: disc,
+    effectivePricePaise: effectiveUnitPricePaise(pp, disc),
     stockQty: p.stock_qty,
     avgRating: Number(agg.avg_rating),
     reviewCount: Number(agg.review_count),
+    displayPrice: priceForMarket(pp, disc, currency, fx()),
+    preDiscountDisplay: priceForMarket(pp, 0, currency, fx()),
+    subcontinent: subcontinentPriceCard(pp, disc, fx()),
     images: (images as { id: number; url: string; alt_text: string | null; sort_order: number }[]).map((i) => ({
       id: i.id,
       url: i.url,
@@ -172,7 +189,7 @@ export async function getProductBySlug(slug: string) {
   };
 }
 
-export async function getRelatedProducts(category: string, excludeId: number, limit = 4) {
+export async function getRelatedProducts(category: string, excludeId: number, limit = 4, currency: MarketCurrency = "INR") {
   const [rows] = await pool.query(
     `SELECT p.*,
       (
@@ -190,7 +207,7 @@ export async function getRelatedProducts(category: string, excludeId: number, li
      LIMIT ?`,
     [category, excludeId, limit]
   );
-  return (rows as Record<string, unknown>[]).map(mapProductListRow);
+  return (rows as Record<string, unknown>[]).map((row) => mapProductListRow(row, currency));
 }
 
 export async function getReviewsForProduct(productId: number) {

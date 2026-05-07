@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
+import { parseDisplayCurrency } from "@/lib/currency";
+import { getCurrencyFromCookies } from "@/lib/currency.server";
 
 type ListRes = {
   items: Array<{
@@ -13,10 +15,13 @@ type ListRes = {
     discountPercent: number;
     imageUrl: string | null;
     avgRating: number;
+    displayPrice?: { formatted: string; currency: string };
   }>;
   total: number;
   page: number;
   pageSize: number;
+  currency?: string;
+  pricingNote?: string;
 };
 
 function buildQuery(sp: Record<string, string | string[] | undefined>) {
@@ -33,6 +38,7 @@ function buildQuery(sp: Record<string, string | string[] | undefined>) {
   set("maxPrice", sp.maxPrice);
   set("sort", sp.sort);
   set("page", sp.page);
+  set("currency", sp.currency);
   p.set("pageSize", "12");
   return p.toString();
 }
@@ -43,15 +49,20 @@ export default async function ProductsPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const sp = await searchParams;
+  const currency = sp.currency ? parseDisplayCurrency(sp.currency) : await getCurrencyFromCookies();
   const qs = buildQuery(sp);
   const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000";
   const res = await fetch(`${base}/api/products?${qs}`, { next: { revalidate: 15 } });
   const data = res.ok ? ((await res.json()) as ListRes) : { items: [], total: 0, page: 1, pageSize: 12 };
+  const curQs = currency !== "INR" ? `?currency=${currency}` : "";
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
       <h1 className="text-3xl font-semibold text-ink-900">Shop lunchboxes</h1>
       <p className="mt-2 text-sm text-ink-900/65">Soft pastels, premium materials, happy lunches.</p>
+      {data.pricingNote && currency !== "INR" && (
+        <p className="mt-2 rounded-2xl border border-mint-100/70 bg-mint-50/50 px-3 py-2 text-xs text-ink-900/70">{data.pricingNote}</p>
+      )}
 
       <form className="mt-8 grid gap-3 rounded-[2rem] border border-white/60 bg-white/60 p-4 backdrop-blur md:grid-cols-6">
         <input name="q" defaultValue={(sp.q as string) ?? ""} placeholder="Search" className="md:col-span-2 rounded-2xl border border-white/70 bg-white/90 px-3 py-2 text-sm" />
@@ -71,6 +82,7 @@ export default async function ProductsPage({
         <div className="flex gap-2 md:col-span-6">
           <input name="minPrice" defaultValue={(sp.minPrice as string) ?? ""} placeholder="Min ₹" className="w-full rounded-2xl border border-white/70 bg-white/90 px-3 py-2 text-sm" />
           <input name="maxPrice" defaultValue={(sp.maxPrice as string) ?? ""} placeholder="Max ₹" className="w-full rounded-2xl border border-white/70 bg-white/90 px-3 py-2 text-sm" />
+          <input type="hidden" name="currency" value={currency} />
           <button className="rounded-2xl bg-ink-900 px-5 py-2 text-sm font-semibold text-cream-50">Apply</button>
         </div>
       </form>
@@ -79,7 +91,7 @@ export default async function ProductsPage({
         {data.items.map((p) => (
           <Link
             key={p.id}
-            href={`/products/${p.slug}`}
+            href={`/products/${p.slug}${curQs}`}
             className="group overflow-hidden rounded-3xl border border-white/60 bg-white/70 shadow-soft backdrop-blur"
           >
             <div className="relative aspect-[4/3] bg-cream-100">
@@ -91,7 +103,9 @@ export default async function ProductsPage({
                 {p.category} · {p.material} · {p.color}
               </div>
               <div className="flex items-center justify-between pt-1">
-                <div className="text-sm font-bold text-ink-900">₹{(p.effectivePricePaise / 100).toFixed(0)}</div>
+                <div className="text-sm font-bold text-ink-900">
+                  {p.displayPrice?.formatted ?? `₹${(p.effectivePricePaise / 100).toFixed(0)}`}
+                </div>
                 <div className="text-xs text-ink-900/50">★ {p.avgRating.toFixed(1)}</div>
               </div>
             </div>

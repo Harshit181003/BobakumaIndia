@@ -24,6 +24,11 @@ export default {
           100: "#EEE9FF",
           500: "#8A7DFF"
         },
+        mint: {
+          50: "#F0FDF7",
+          100: "#D4F5E5",
+          500: "#3CB88A"
+        },
         ink: {
           900: "#1B1B1F"
         }
@@ -34,7 +39,7 @@ export default {
         "3xl": "1.75rem"
       },
       boxShadow: {
-        soft: "0 20px 60px rgba(255, 107, 154, 0.14)"
+        soft: "0 20px 60px rgba(61, 184, 138, 0.12)"
       }
     }
   },

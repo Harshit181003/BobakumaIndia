@@ -26,18 +26,18 @@ VALUES
   ('KIDSLOVE15', 15, 79900, 500, DATE_ADD(UTC_TIMESTAMP(), INTERVAL 60 DAY), 1)
 ON DUPLICATE KEY UPDATE is_active=VALUES(is_active);
 
--- Dummy lunchbox products (placeholder high-quality Unsplash images)
+-- Lunchbox lineup (placeholder photos — swap for your Bobakuma packshots in /public/brand/)
 INSERT INTO products
   (name, slug, description, category, material, capacity_ml, color, price_paise, discount_percent, stock_qty, is_active)
 VALUES
   (
-    'Bento Blossom Lunchbox',
+    'Bobakuma Two-Tier Bento (White / Mint Strap)',
     'bento-blossom-lunchbox',
-    'A pastel bento lunchbox with compartments, designed for happy everyday meals. Lightweight, leak-resistant, and easy to clean.',
+    'Stackable two-tier bento with a soft mint strap and candy-bright badge prints. Lightweight, everyday leak-aware seal — great for kids and cute desk lunches.',
     'KIDS',
     'BPA_FREE_PLASTIC',
     900,
-    'Pink',
+    'White / Mint',
     89900,
     10,
     120,
@@ -83,13 +83,14 @@ VALUES
     1
   )
 ON DUPLICATE KEY UPDATE
+  name=VALUES(name),
   description=VALUES(description),
+  color=VALUES(color),
   price_paise=VALUES(price_paise),
   discount_percent=VALUES(discount_percent),
   stock_qty=VALUES(stock_qty),
   is_active=VALUES(is_active);
 
--- Images (replace for seeded slugs to avoid duplicates on re-run)
 DELETE pi FROM product_images pi
 INNER JOIN products p ON p.id = pi.product_id
 WHERE p.slug IN (
@@ -107,24 +108,62 @@ SELECT p.id,
 FROM products p
 JOIN (
   SELECT 'bento-blossom-lunchbox' AS slug,
-         'https://images.unsplash.com/photo-1543363136-5ae0b0077b99?auto=format&fit=crop&w=1200&q=80' AS url,
-         'Bento lunchbox (pink, pastel)' AS alt_text,
+         'https://images.unsplash.com/photo-1587734193613-12eaf7e0e4d1?auto=format&fit=crop&w=1200&q=80' AS url,
+         'Stacked white bento lunchbox' AS alt_text,
          0 AS sort_order
+  UNION ALL
+  SELECT 'bento-blossom-lunchbox',
+         'https://images.unsplash.com/photo-1615485920415-680443d9688c?auto=format&fit=crop&w=1200&q=80',
+         'Minimal bento containers on wood',
+         1
+  UNION ALL
+  SELECT 'bento-blossom-lunchbox',
+         'https://images.unsplash.com/photo-1594398907494-9f3f9d6949b8?auto=format&fit=crop&w=1200&q=80',
+         'Colorful bento-style lunch set',
+         2
   UNION ALL
   SELECT 'office-zen-steel-lunchbox',
          'https://images.unsplash.com/photo-1524594081293-190a2fe0baae?auto=format&fit=crop&w=1200&q=80',
          'Steel lunchbox (premium office)',
          0
   UNION ALL
+  SELECT 'office-zen-steel-lunchbox',
+         'https://images.unsplash.com/photo-1526318896980-cf78c088247c?auto=format&fit=crop&w=1200&q=80',
+         'Metal food container flat lay',
+         1
+  UNION ALL
+  SELECT 'office-zen-steel-lunchbox',
+         'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80',
+         'Lunch spread with containers',
+         2
+  UNION ALL
   SELECT 'peach-pop-mini-tiffin',
          'https://images.unsplash.com/photo-1521305916504-4a1121188589?auto=format&fit=crop&w=1200&q=80',
          'Mini tiffin (snacks)',
          0
   UNION ALL
+  SELECT 'peach-pop-mini-tiffin',
+         'https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=1200&q=80',
+         'Bright breakfast table',
+         1
+  UNION ALL
+  SELECT 'peach-pop-mini-tiffin',
+         'https://images.unsplash.com/photo-1543363136-5ae0b0077b99?auto=format&fit=crop&w=1200&q=80',
+         'Pastel pink bento box',
+         2
+  UNION ALL
   SELECT 'cream-cloud-glass-lunchbox',
          'https://images.unsplash.com/photo-1604909053278-9f5183e46b25?auto=format&fit=crop&w=1200&q=80',
          'Glass lunchbox (cream lid)',
          0
+  UNION ALL
+  SELECT 'cream-cloud-glass-lunchbox',
+         'https://images.unsplash.com/photo-1543353071-873f17a7a088?auto=format&fit=crop&w=1200&q=80',
+         'Meal prep glass containers',
+         1
+  UNION ALL
+  SELECT 'cream-cloud-glass-lunchbox',
+         'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=1200&q=80',
+         'Fresh lunch spread',
+         2
 ) i ON i.slug = p.slug;
-
-

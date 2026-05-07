@@ -9,6 +9,8 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/cn";
 import { apiFetch, clearTokens, getAccessToken } from "@/lib/api";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { CurrencySwitcher } from "./CurrencySwitcher";
+import { CurrencyLink } from "./CurrencyLink";
 
 type Me = { user: { id: number; email: string | null; role: string; name: string | null } };
 
@@ -56,7 +58,7 @@ export function Navbar() {
 
         <nav className="hidden items-center gap-1 md:flex">
           {links.map((l) => (
-            <Link
+            <CurrencyLink
               key={l.href}
               href={l.href}
               className={cn(
@@ -65,10 +67,10 @@ export function Navbar() {
               )}
             >
               {l.label}
-            </Link>
+            </CurrencyLink>
           ))}
           {isAdmin && (
-            <Link
+            <CurrencyLink
               href="/admin"
               className={cn(
                 "rounded-2xl px-3 py-2 text-sm font-semibold text-lavender-500 hover:bg-white/60",
@@ -76,11 +78,12 @@ export function Navbar() {
               )}
             >
               {t("nav.admin")}
-            </Link>
+            </CurrencyLink>
           )}
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
+          <CurrencySwitcher />
           <LanguageSwitcher />
           <button
             type="button"
@@ -141,15 +144,16 @@ export function Navbar() {
         <div className="border-t border-white/40 bg-cream-50/95 px-4 py-3 md:hidden">
           <div className="flex flex-col gap-2">
             {links.map((l) => (
-              <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="rounded-2xl px-3 py-2 text-sm">
+              <CurrencyLink key={l.href} href={l.href} onClick={() => setOpen(false)} className="rounded-2xl px-3 py-2 text-sm">
                 {l.label}
-              </Link>
+              </CurrencyLink>
             ))}
             {isAdmin && (
-              <Link href="/admin" onClick={() => setOpen(false)} className="rounded-2xl px-3 py-2 text-sm font-semibold">
+              <CurrencyLink href="/admin" onClick={() => setOpen(false)} className="rounded-2xl px-3 py-2 text-sm font-semibold">
                 {t("nav.admin")}
-              </Link>
+              </CurrencyLink>
             )}
+            <CurrencySwitcher className="w-full justify-center" />
             <LanguageSwitcher />
             <Link href="/login" onClick={() => setOpen(false)} className="rounded-2xl px-3 py-2 text-sm">
               {t("nav.login")}

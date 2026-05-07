@@ -34,15 +34,24 @@ const envSchema = z.object({
   SMTP_PORT: z.string().optional(),
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
-  SMTP_FROM: z.string().optional()
+  SMTP_FROM: z.string().optional(),
+
+  /** Subcontinent display pricing (INR is DB baseline). Update from your finance source. */
+  PRICING_INR_TO_NPR: z.string().default("1.60"),
+  PRICING_INR_TO_LKR: z.string().default("3.55"),
+  PRICING_ADJUST_NP: z.string().default("1.00"),
+  PRICING_ADJUST_LK: z.string().default("1.00")
 });
 
 export type Env = z.infer<typeof envSchema>;
 
 export const env: Env = envSchema.parse(process.env);
 
+/** Many hosts (cPanel Node, PaaS) set `PORT`; prefer it over `BACKEND_PORT`. */
+const listenPort = Number(process.env.PORT || env.BACKEND_PORT || 4000);
+
 export const config = {
-  port: Number(env.BACKEND_PORT ?? 4000),
+  port: listenPort,
   appPublicUrl: env.APP_PUBLIC_URL,
   mysql: {
     host: env.MYSQL_HOST,
@@ -73,6 +82,12 @@ export const config = {
     user: env.SMTP_USER,
     pass: env.SMTP_PASS,
     from: env.SMTP_FROM
+  },
+  pricing: {
+    inrToNpr: Number(env.PRICING_INR_TO_NPR),
+    inrToLkr: Number(env.PRICING_INR_TO_LKR),
+    adjustNp: Number(env.PRICING_ADJUST_NP),
+    adjustLk: Number(env.PRICING_ADJUST_LK)
   }
 } as const;
 

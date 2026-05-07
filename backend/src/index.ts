@@ -39,8 +39,9 @@ app.get("/health", (_req, res) => {
 app.use("/api", apiRouter);
 
 const port = config.port;
-app.listen(port, () => {
+const host = process.env.BIND_HOST ?? (process.env.NODE_ENV === "production" ? "0.0.0.0" : "127.0.0.1");
+app.listen(port, host, () => {
   // eslint-disable-next-line no-console
-  console.log(`API listening on :${port}`);
+  console.log(`API listening on ${host}:${port}`);
 });
 

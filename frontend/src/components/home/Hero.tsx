@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import Link from "next/link";
+import { CurrencyLink } from "@/components/layout/CurrencyLink";
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
@@ -44,11 +44,11 @@ export function Hero() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 shadow-soft backdrop-blur"
+              className="inline-flex items-center gap-2 rounded-full border border-mint-100/60 bg-white/80 px-4 py-2 shadow-soft backdrop-blur"
             >
-              <span className="h-2 w-2 rounded-full bg-blush-500" />
+              <span className="h-2 w-2 rounded-full bg-mint-500" />
               <span className="text-sm font-medium text-ink-900">
-                Cute. Premium. Made for everyday smiles.
+                White, mint, and candy-bright accents — Bobakuma energy.
               </span>
             </motion.div>
 
@@ -67,8 +67,8 @@ export function Hero() {
               transition={{ duration: 0.7, delay: 0.12 }}
               className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-ink-900/70 md:text-lg"
             >
-              Soft pastel designs for school kids, parents, office users, and
-              gifting. Lightweight, leak-resistant, and joyfully cute.
+              Stackable bentos, soft straps, and kawaii details inspired by the
+              lunchboxes you love. Built for school, work, and gifting.
             </motion.p>
 
             <motion.div
@@ -77,25 +77,25 @@ export function Hero() {
               transition={{ duration: 0.7, delay: 0.18 }}
               className="hero-float mt-8 flex flex-col gap-3 sm:flex-row"
             >
-              <Link
+              <CurrencyLink
                 href="/products"
                 className="inline-flex justify-center rounded-3xl bg-ink-900 px-6 py-3 text-sm font-semibold text-cream-50 shadow-soft transition hover:translate-y-[-1px] hover:bg-ink-900/90 active:translate-y-0"
               >
                 Shop lunchboxes
-              </Link>
-              <Link
+              </CurrencyLink>
+              <CurrencyLink
                 href="/products?category=KIDS"
                 className="inline-flex justify-center rounded-3xl bg-white/70 px-6 py-3 text-sm font-semibold text-ink-900 shadow-soft backdrop-blur transition hover:translate-y-[-1px] hover:bg-white/90 active:translate-y-0"
               >
                 Explore cute collections
-              </Link>
+              </CurrencyLink>
             </motion.div>
           </div>
 
           <div className="relative">
-            <div className="relative mx-auto aspect-square max-w-md rounded-[2rem] bg-white/60 p-6 shadow-soft backdrop-blur">
-              <FloatingDot className="absolute -left-6 top-12 h-10 w-10 rounded-full bg-peach-100 blur-[1px]" delay={0} />
-              <FloatingDot className="absolute -right-8 top-24 h-14 w-14 rounded-full bg-lavender-100 blur-[1px]" delay={0.6} />
+            <div className="relative mx-auto aspect-square max-w-md rounded-[2rem] border border-mint-100/50 bg-gradient-to-br from-white/90 to-mint-50/80 p-6 shadow-soft backdrop-blur">
+              <FloatingDot className="absolute -left-6 top-12 h-10 w-10 rounded-full bg-mint-100 blur-[1px]" delay={0} />
+              <FloatingDot className="absolute -right-8 top-24 h-14 w-14 rounded-full bg-peach-100 blur-[1px]" delay={0.6} />
               <FloatingDot className="absolute bottom-10 left-6 h-12 w-12 rounded-full bg-blush-100 blur-[1px]" delay={1.2} />
 
               <motion.div
@@ -110,22 +110,22 @@ export function Hero() {
                   className="relative"
                 >
                   <img
-                    alt="Lunchbox preview"
-                    src="https://images.unsplash.com/photo-1543363136-5ae0b0077b99?auto=format&fit=crop&w=900&q=80"
-                    className="h-64 w-64 rounded-3xl object-cover shadow-soft md:h-72 md:w-72"
+                    alt="Stacked white bento lunchbox"
+                    src="https://images.unsplash.com/photo-1587734193613-12eaf7e0e4d1?auto=format&fit=crop&w=900&q=80"
+                    className="h-64 w-64 rounded-3xl object-cover shadow-soft ring-2 ring-mint-100/80 md:h-72 md:w-72"
                   />
-                  <div className="pointer-events-none absolute -bottom-6 left-1/2 w-[88%] -translate-x-1/2 rounded-3xl bg-white/80 p-4 shadow-soft backdrop-blur">
+                  <div className="pointer-events-none absolute -bottom-6 left-1/2 w-[88%] -translate-x-1/2 rounded-3xl border border-mint-100/60 bg-white/90 p-4 shadow-soft backdrop-blur">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-sm font-semibold text-ink-900">
-                          Bento Blossom
+                          Two-tier bento
                         </div>
                         <div className="text-xs text-ink-900/60">
-                          Leak‑resistant • Kids & Office
+                          Mint strap • leak-aware seal
                         </div>
                       </div>
-                      <div className="rounded-2xl bg-blush-50 px-3 py-2 text-sm font-semibold text-ink-900">
-                        ₹899
+                      <div className="rounded-2xl bg-mint-100 px-3 py-2 text-sm font-semibold text-ink-900">
+                        From ₹899
                       </div>
                     </div>
                   </div>

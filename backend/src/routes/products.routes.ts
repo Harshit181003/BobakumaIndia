@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { getProductBySlug, getRelatedProducts, getReviewsForProduct, listProducts } from "../services/products.service.js";
+import { parseMarketCurrency } from "../utils/pricing.js";
 
 export const productsRouter = Router();
 
@@ -13,7 +14,11 @@ const listQuerySchema = z.object({
   maxPrice: z.coerce.number().int().optional(),
   sort: z.enum(["newest", "price_asc", "price_desc", "rating"]).optional(),
   page: z.coerce.number().int().min(1).optional(),
-  pageSize: z.coerce.number().int().min(1).max(48).optional()
+  pageSize: z.coerce.number().int().min(1).max(48).optional(),
+  currency: z.preprocess(
+    (v) => (typeof v === "string" ? v.toUpperCase() : v),
+    z.enum(["INR", "NPR", "LKR"]).optional()
+  )
 });
 
 productsRouter.get("/", async (req, res) => {
@@ -32,7 +37,8 @@ productsRouter.get("/", async (req, res) => {
     maxPricePaise: maxPaise,
     sort: parsed.data.sort ?? "newest",
     page: parsed.data.page ?? 1,
-    pageSize: parsed.data.pageSize ?? 12
+    pageSize: parsed.data.pageSize ?? 12,
+    currency: parseMarketCurrency(parsed.data.currency)
   });
 
   return res.json(result);
@@ -40,10 +46,22 @@ productsRouter.get("/", async (req, res) => {
 
 productsRouter.get("/:slug", async (req, res) => {
   const slug = req.params.slug;
-  const p = await getProductBySlug(slug);
+  const curRaw = typeof req.query.currency === "string" ? req.query.currency : undefined;
+  const currency = parseMarketCurrency(curRaw);
+  const p = await getProductBySlug(slug, currency);
   if (!p) return res.status(404).json({ error: "NOT_FOUND" });
 
-  const [reviews, related] = await Promise.all([getReviewsForProduct(p.id), getRelatedProducts(p.category, p.id, 4)]);
+  const [reviews, related] = await Promise.all([
+    getReviewsForProduct(p.id),
+    getRelatedProducts(p.category, p.id, 4, currency)
+  ]);
 
-  return res.json({ product: p, reviews, related });
+  return res.json({
+    product: p,
+    reviews,
+    related,
+    currency,
+    pricingNote:
+      "NPR/LKR are indicative from INR list price and your server FX settings. Payment is settled in INR (Razorpay)."
+  });
 });
