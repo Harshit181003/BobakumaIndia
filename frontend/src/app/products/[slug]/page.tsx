@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ProductActions } from "./ProductActions";
 import { parseDisplayCurrency } from "@/lib/currency";
 import { getCurrencyFromCookies } from "@/lib/currency.server";
+import { InlineCurrency } from "@/components/layout/InlineCurrency";
 
 type SubPrice = { formatted: string; currency: string; derivedFromInr: boolean };
 
@@ -85,6 +86,7 @@ export default async function ProductPage({
               <div className="text-sm text-ink-900/45 line-through">{p.preDiscountDisplay.formatted}</div>
             )}
           </div>
+          <InlineCurrency />
           <div className="mt-3 rounded-2xl border border-mint-100/70 bg-mint-50/40 px-3 py-2 text-xs text-ink-900/70">
             <div className="font-semibold text-ink-900/80">Compare (after discount)</div>
             <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">

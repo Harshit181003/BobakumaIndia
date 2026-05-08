@@ -1,6 +1,40 @@
 ---
 pid: 19652
 cwd: |
-  C:\Users\harsh
+  C:\Users\harsh\.cursor\projects\empty-window
+active_command: git add -A
+last_command: git status
+last_exit_code: 0
 ---
-PS C:\Users\harsh>
+PS C:\Users\harsh> cd C:\Users\harsh\.cursor\projects\empty-window                                
+PS C:\Users\harsh\.cursor\projects\empty-window> git status                                       
+On branch main                                                                                    
+Your branch is up to date with 'origin/main'.                                    
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   .env.example
+        modified:   .gitignore
+        modified:   agent-transcripts/4a9a4290-29a2-4618-b170-57f17aacb7df/4a9a4290-29a2-4618-b170-57f17aacb7df.jsonl
+        modified:   backend/src/config.ts
+        modified:   backend/src/index.ts
+        modified:   frontend/next-env.d.ts
+        modified:   frontend/src/app/auth/callback/page.tsx
+        modified:   frontend/src/app/layout.tsx
+        modified:   frontend/src/app/login/page.tsx
+        modified:   frontend/src/app/products/[slug]/page.tsx
+        modified:   frontend/src/app/products/page.tsx
+        modified:   frontend/src/app/register/page.tsx
+        modified:   frontend/src/i18n/resources.ts
+        modified:   frontend/tsconfig.json
+        modified:   terminals/1.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        frontend/src/app/auth/callback/CallbackClient.tsx
+        frontend/src/components/layout/InlineCurrency.tsx
+        package-lock.json
+
+no changes added to commit (use "git add" and/or "git commit -a")
+PS C:\Users\harsh\.cursor\projects\empty-window> git add -A

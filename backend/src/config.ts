@@ -10,6 +10,8 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
 const envSchema = z.object({
   BACKEND_PORT: z.string().optional(),
   APP_PUBLIC_URL: z.string().default("http://localhost:3000"),
+  /** Comma-separated list of allowed CORS origins (e.g. https://bobakuma.in,https://www.bobakuma.in). */
+  CORS_ORIGINS: z.string().optional(),
 
   MYSQL_HOST: z.string().default("localhost"),
   MYSQL_PORT: z.string().default("3306"),
@@ -53,6 +55,10 @@ const listenPort = Number(process.env.PORT || env.BACKEND_PORT || 4000);
 export const config = {
   port: listenPort,
   appPublicUrl: env.APP_PUBLIC_URL,
+  corsOrigins: (env.CORS_ORIGINS ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean),
   mysql: {
     host: env.MYSQL_HOST,
     port: Number(env.MYSQL_PORT),

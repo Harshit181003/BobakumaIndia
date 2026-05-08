@@ -14,7 +14,12 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: config.appPublicUrl,
+    origin: (origin, cb) => {
+      const allow = new Set([config.appPublicUrl, ...config.corsOrigins]);
+      if (!origin) return cb(null, true);
+      if (allow.has(origin)) return cb(null, true);
+      return cb(new Error(`CORS_BLOCKED:${origin}`), false);
+    },
     credentials: true
   })
 );

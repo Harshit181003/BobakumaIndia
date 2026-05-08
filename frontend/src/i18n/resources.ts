@@ -56,9 +56,15 @@ export const en = {
     shipping: "Shipping details"
   },
   auth: {
+    welcomeBack: "Welcome back",
     email: "Email",
     password: "Password",
-    name: "Name"
+    name: "Name",
+    newHere: "New here?",
+    createAccount: "Create an account",
+    createTitle: "Create your Bobakuma account",
+    passwordMin: "Password (min 8 chars)",
+    haveAccount: "Already have an account?"
   },
   chat: {
     open: "Help",

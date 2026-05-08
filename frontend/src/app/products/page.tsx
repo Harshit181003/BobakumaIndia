@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { parseDisplayCurrency } from "@/lib/currency";
 import { getCurrencyFromCookies } from "@/lib/currency.server";
+import { InlineCurrency } from "@/components/layout/InlineCurrency";
 
 type ListRes = {
   items: Array<{
@@ -60,6 +61,7 @@ export default async function ProductsPage({
     <div className="mx-auto max-w-6xl px-4 py-10">
       <h1 className="text-3xl font-semibold text-ink-900">Shop lunchboxes</h1>
       <p className="mt-2 text-sm text-ink-900/65">Soft pastels, premium materials, happy lunches.</p>
+      <InlineCurrency />
       {data.pricingNote && currency !== "INR" && (
         <p className="mt-2 rounded-2xl border border-mint-100/70 bg-mint-50/50 px-3 py-2 text-xs text-ink-900/70">{data.pricingNote}</p>
       )}
