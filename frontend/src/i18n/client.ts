@@ -10,6 +10,9 @@ void i18n.use(initReactI18next).init({
   resources: resources as unknown as Record<string, { translation: Record<string, unknown> }>,
   lng: "en",
   fallbackLng: "en",
+  supportedLngs: [...locales],
+  nonExplicitSupportedLngs: true,
+  load: "languageOnly",
   interpolation: { escapeValue: false }
 });
 
@@ -24,7 +27,8 @@ i18n.on("languageChanged", (l) => {
 
 export function hydrateLanguageFromStorage() {
   if (typeof window === "undefined") return;
-  const saved = localStorage.getItem(STORAGE);
+  const raw = localStorage.getItem(STORAGE);
+  const saved = raw?.split("-")[0]?.toLowerCase();
   if (saved && locales.includes(saved as (typeof locales)[number])) {
     void i18n.changeLanguage(saved);
   }

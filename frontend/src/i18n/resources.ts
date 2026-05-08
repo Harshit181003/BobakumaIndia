@@ -1,8 +1,25 @@
-/** Base English copy — other locales fall back via i18next then merge overrides where added. */
+import {
+  bnOverlay,
+  deOverlay,
+  esOverlay,
+  frOverlay,
+  guOverlay,
+  hiOverlay,
+  jaOverlay,
+  mrOverlay,
+  overlay,
+  paOverlay,
+  taOverlay,
+  teOverlay
+} from "./localeOverlays";
+
+/** English base — every key other locales may override. */
 export const en = {
   nav: {
     home: "Home",
     products: "Shop",
+    shirts: "T‑shirts",
+    lunchboxes: "Lunchboxes",
     cart: "Cart",
     wishlist: "Wishlist",
     orders: "Orders",
@@ -17,15 +34,67 @@ export const en = {
     offerTitle: "Spring sparkle sale",
     offerBody: "Use code WELCOME10 on your first cute lunchbox haul.",
     featured: "Featured lunchboxes",
+    featuredShirts: "Featured T‑shirts",
     gallery: "Soft tones, real life",
     testimonials: "Loved by families",
     newsletterTitle: "Newsletter",
     newsletterHint: "Pastel drops, restocks, and secret coupons.",
     newsletterPlaceholder: "you@email.com",
-    subscribe: "Subscribe"
+    subscribe: "Subscribe",
+    newsletterSuccess: "You’re in — we’ll email you updates.",
+    newsletterError: "Could not subscribe — try again later.",
+    rangeLabel: "Our range",
+    pickVibe: "Pick a vibe",
+    viewAll: "View all →",
+    everySize: "Every size",
+    forEveryNeed: "For every need",
+    seeSizes: "See sizes →",
+    explore: "Explore +",
+    heroBadge: "White, mint, and candy-bright accents — Bobakuma energy.",
+    heroTitle: "Lunchboxes that feel like a little gift—every day.",
+    heroBody: "Stackable bentos, soft straps, and kawaii details. School, work, and gifting.",
+    shopCta: "Shop lunchboxes",
+    cuteCta: "Explore cute collections",
+    mixMatch: "Mix & match",
+    buildSet: "Build your set",
+    buildSetBody: "Pick strap colors, prints, and sizes that feel like you.",
+    tryNow: "Try now",
+    corpGift: "Corporate gifting",
+    giftBoxes: "Gift boxes",
+    giftBoxesBody: "Premium lunchboxes that look great on every desk.",
+    exploreBtn: "Explore",
+    communityTag: "#Bobakuma",
+    communityTitle: "Community",
+    communityBody: "Real lunches, colors, and desk setups.",
+    viewPosts: "View posts",
+    shirtsSectionTitle: "Graphic tees",
+    shirtsSectionSub: "Prints and pastels to match your lunchbox.",
+    shopShirts: "Shop shirts",
+    heroCardTitle: "Two-tier bento",
+    heroCardSub: "Mint strap • leak-aware seal",
+    heroCardFrom: "From ₹899",
+    colOriginal: "Original",
+    colOriginalSub: "Clean & minimal",
+    colPositive: "Positive",
+    colPositiveSub: "Soft tones",
+    colGraphic: "Graphic",
+    colGraphicSub: "Fun prints",
+    colKids: "Kids",
+    colKidsSub: "Cute + sturdy",
+    colShirts: "Tees",
+    colShirtsSub: "Graphic cotton tees",
+    colAccessories: "Accessories",
+    colAccessoriesSub: "Cutlery & add-ons",
+    sizeSnacks: "Small snacks",
+    sizeLight: "Light lunch",
+    sizeDaily: "Daily meals",
+    sizeBig: "Big appetite",
+    sizeFamily: "Family share",
+    sizeMealprep: "Meal prep"
   },
   products: {
-    title: "Shop lunchboxes",
+    title: "Shop lunchboxes & shirts",
+    subtitle: "Soft pastels, premium materials, happy lunches.",
     search: "Search",
     filters: "Filters",
     category: "Category",
@@ -34,14 +103,30 @@ export const en = {
     price: "Price (₹)",
     sort: "Sort",
     all: "All",
+    allCategories: "All categories",
     kids: "Kids",
     office: "Office",
+    shirts: "T‑shirts",
     addToCart: "Add to cart",
     addToWishlist: "Wishlist",
     reviews: "Reviews",
     related: "You may also like",
     inStock: "In stock",
-    outStock: "Out of stock"
+    outStock: "Out of stock",
+    apply: "Apply",
+    sortNewest: "Newest",
+    sortPriceAsc: "Price ↑",
+    sortPriceDesc: "Price ↓",
+    sortRating: "Rating",
+    minInr: "Min ₹",
+    maxInr: "Max ₹",
+    showing: "Showing {{shown}} of {{total}} · page {{page}}",
+    compareRegion: "Compare (after discount)",
+    reviewsCount: "reviews",
+    checkoutChargesPrefix: "Checkout charges",
+    checkoutChargesSuffix: "through Razorpay (INR).",
+    noReviewsYet: "No reviews yet — be the first.",
+    capacity: "Capacity"
   },
   cart: {
     title: "Your cart",
@@ -64,7 +149,13 @@ export const en = {
     createAccount: "Create an account",
     createTitle: "Create your Bobakuma account",
     passwordMin: "Password (min 8 chars)",
-    haveAccount: "Already have an account?"
+    haveAccount: "Already have an account?",
+    emailInUse: "That email is already registered.",
+    invalidInput: "Please check your email and password.",
+    networkError: "Could not reach the server — check API URL and network.",
+    loginFailed: "Invalid email or password.",
+    registerFailed: "Could not create your account. Please try again.",
+    accountDisabled: "This account is disabled."
   },
   chat: {
     open: "Help",
@@ -74,29 +165,21 @@ export const en = {
   }
 } as const;
 
-const hi = {
-  ...en,
-  nav: { ...en.nav, home: "होम", products: "दुकान", cart: "कार्ट", login: "लॉग इन", register: "रजिस्टर" },
-  home: {
-    ...en.home,
-    offerTitle: "वसंत ऑफर",
-    offerBody: "अपनी पहली लंचबॉक्स खरीद पर WELCOME10 इस्तेमाल करें।"
-  }
-} as const;
+const hi = overlay(en as unknown as Record<string, unknown>, hiOverlay as never) as typeof en;
 
 export const resources = {
   en: { translation: en },
   hi: { translation: hi },
-  mr: { translation: en },
-  gu: { translation: en },
-  ta: { translation: en },
-  te: { translation: en },
-  bn: { translation: en },
-  pa: { translation: en },
-  es: { translation: en },
-  fr: { translation: en },
-  de: { translation: en },
-  ja: { translation: en }
+  mr: { translation: overlay(en as unknown as Record<string, unknown>, mrOverlay as never) as typeof en },
+  gu: { translation: overlay(en as unknown as Record<string, unknown>, guOverlay as never) as typeof en },
+  ta: { translation: overlay(en as unknown as Record<string, unknown>, taOverlay as never) as typeof en },
+  te: { translation: overlay(en as unknown as Record<string, unknown>, teOverlay as never) as typeof en },
+  bn: { translation: overlay(en as unknown as Record<string, unknown>, bnOverlay as never) as typeof en },
+  pa: { translation: overlay(en as unknown as Record<string, unknown>, paOverlay as never) as typeof en },
+  es: { translation: overlay(en as unknown as Record<string, unknown>, esOverlay as never) as typeof en },
+  fr: { translation: overlay(en as unknown as Record<string, unknown>, frOverlay as never) as typeof en },
+  de: { translation: overlay(en as unknown as Record<string, unknown>, deOverlay as never) as typeof en },
+  ja: { translation: overlay(en as unknown as Record<string, unknown>, jaOverlay as never) as typeof en }
 } as const;
 
 export const locales = ["en", "hi", "mr", "gu", "ta", "te", "bn", "pa", "es", "fr", "de", "ja"] as const;

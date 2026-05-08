@@ -15,6 +15,19 @@ export function clearTokens() {
   localStorage.removeItem("bobakuma_refresh_token");
 }
 
+export function getApiError(e: unknown): { status?: number; errorCode?: string } {
+  if (e && typeof e === "object" && "status" in e) {
+    const ae = e as { status?: number; body?: unknown };
+    let errorCode: string | undefined;
+    if (ae.body && typeof ae.body === "object" && ae.body !== null && "error" in ae.body) {
+      const err = (ae.body as { error?: unknown }).error;
+      if (typeof err === "string") errorCode = err;
+    }
+    return { status: ae.status, errorCode };
+  }
+  return {};
+}
+
 export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   const headers = new Headers(init.headers);
   if (!headers.has("Content-Type") && init.body && !(init.body instanceof FormData)) {

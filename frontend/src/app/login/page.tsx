@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { API, apiFetch, setTokens } from "@/lib/api";
+import { API, apiFetch, getApiError, setTokens } from "@/lib/api";
 import { useTranslation } from "react-i18next";
 
 export default function LoginPage() {
@@ -26,12 +26,16 @@ export default function LoginPage() {
           try {
             const r = await apiFetch<{ tokens: { accessToken: string; refreshToken: string } }>("/auth/login", {
               method: "POST",
-              body: JSON.stringify({ email, password })
+              body: JSON.stringify({ email: email.trim().toLowerCase(), password })
             });
             setTokens(r.tokens.accessToken, r.tokens.refreshToken);
             router.push(next);
-          } catch {
-            setErr("Invalid email or password.");
+          } catch (e) {
+            const { status, errorCode } = getApiError(e);
+            if (status === 403 || errorCode === "ACCOUNT_DISABLED") setErr(t("auth.accountDisabled"));
+            else if (status === 400) setErr(t("auth.invalidInput"));
+            else if (e instanceof TypeError) setErr(t("auth.networkError"));
+            else setErr(t("auth.loginFailed"));
           }
         }}
       >

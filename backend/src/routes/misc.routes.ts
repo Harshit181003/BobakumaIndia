@@ -10,15 +10,22 @@ const newsletterSchema = z.object({
 });
 
 miscRouter.post("/newsletter", async (req, res) => {
-  const parsed = newsletterSchema.safeParse(req.body);
+  const body = req.body && typeof req.body === "object" ? (req.body as Record<string, unknown>) : {};
+  const parsed = newsletterSchema.safeParse({
+    ...body,
+    email: typeof body.email === "string" ? body.email.trim().toLowerCase() : body.email
+  });
   if (!parsed.success) return res.status(400).json({ error: "INVALID_INPUT", details: parsed.error.flatten() });
   try {
     await pool.query("INSERT INTO newsletters (email, language) VALUES (?, ?)", [
       parsed.data.email,
       parsed.data.language
     ]);
-  } catch {
-    // duplicate email — still ok for UX
+  } catch (e: unknown) {
+    const code = e && typeof e === "object" && "code" in e ? String((e as { code: string }).code) : "";
+    if (code === "ER_DUP_ENTRY") return res.json({ ok: true, duplicate: true });
+    console.error("newsletter insert failed", e);
+    return res.status(500).json({ error: "NEWSLETTER_FAILED" });
   }
   return res.json({ ok: true });
 });

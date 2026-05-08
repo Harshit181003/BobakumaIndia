@@ -60,7 +60,7 @@ const upsertProductSchema = z.object({
   name: z.string().min(1).max(255),
   slug: z.string().min(1).max(255).regex(/^[a-z0-9-]+$/),
   description: z.string().min(1),
-  category: z.enum(["KIDS", "OFFICE"]),
+  category: z.enum(["KIDS", "OFFICE", "SHIRTS"]),
   material: z.string().min(1).max(50),
   capacityMl: z.coerce.number().int().positive().optional().nullable(),
   color: z.string().min(1).max(50),

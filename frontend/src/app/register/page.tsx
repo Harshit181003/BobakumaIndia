@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { apiFetch, setTokens } from "@/lib/api";
+import { apiFetch, getApiError, setTokens } from "@/lib/api";
 import { useTranslation } from "react-i18next";
 
 export default function RegisterPage() {
@@ -25,12 +25,16 @@ export default function RegisterPage() {
           try {
             const r = await apiFetch<{ tokens: { accessToken: string; refreshToken: string } }>("/auth/register", {
               method: "POST",
-              body: JSON.stringify({ name, email, password })
+              body: JSON.stringify({ name: name.trim(), email: email.trim().toLowerCase(), password })
             });
             setTokens(r.tokens.accessToken, r.tokens.refreshToken);
             router.push("/");
-          } catch {
-            setErr("Could not register — email may already be in use.");
+          } catch (e) {
+            const { status, errorCode } = getApiError(e);
+            if (status === 409 || errorCode === "EMAIL_IN_USE") setErr(t("auth.emailInUse"));
+            else if (status === 400) setErr(t("auth.invalidInput"));
+            else if (e instanceof TypeError) setErr(t("auth.networkError"));
+            else setErr(t("auth.registerFailed"));
           }
         }}
       >

@@ -1,10 +1,15 @@
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductActions } from "./ProductActions";
+import {
+  ProductMetaLine,
+  ProductPriceBlock,
+  ProductSpecsDl,
+  RelatedProductsSection,
+  ReviewsSection
+} from "./ProductDetailClient";
 import { parseDisplayCurrency } from "@/lib/currency";
 import { getCurrencyFromCookies } from "@/lib/currency.server";
-import { InlineCurrency } from "@/components/layout/InlineCurrency";
 
 type SubPrice = { formatted: string; currency: string; derivedFromInr: boolean };
 
@@ -77,86 +82,26 @@ export default async function ProductPage({
         </div>
         <div>
           <h1 className="text-3xl font-semibold text-ink-900">{p.name}</h1>
-          <div className="mt-2 text-sm text-ink-900/60">
-            ★ {p.avgRating.toFixed(1)} ({p.reviewCount} reviews) · {p.category} · {p.stockQty > 0 ? "In stock" : "Out of stock"}
-          </div>
-          <div className="mt-4 flex flex-wrap items-baseline gap-3">
-            <div className="text-2xl font-bold text-ink-900">{p.displayPrice.formatted}</div>
-            {p.discountPercent > 0 && (
-              <div className="text-sm text-ink-900/45 line-through">{p.preDiscountDisplay.formatted}</div>
-            )}
-          </div>
-          <InlineCurrency />
-          <div className="mt-3 rounded-2xl border border-mint-100/70 bg-mint-50/40 px-3 py-2 text-xs text-ink-900/70">
-            <div className="font-semibold text-ink-900/80">Compare (after discount)</div>
-            <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
-              <span>India: {p.subcontinent.IN.formatted}</span>
-              <span>Nepal: {p.subcontinent.NP.formatted}</span>
-              <span>Sri Lanka: {p.subcontinent.LK.formatted}</span>
-            </div>
-            {data.pricingNote && currency !== "INR" && <p className="mt-2 text-[11px] text-ink-900/55">{data.pricingNote}</p>}
-            {currency !== "INR" && (
-              <p className="mt-2 text-[11px] font-medium text-ink-900/65">
-                Checkout charges{" "}
-                <strong className="text-ink-900">{p.subcontinent.IN.formatted}</strong> through Razorpay (INR).
-              </p>
-            )}
-          </div>
+          <ProductMetaLine avgRating={p.avgRating} reviewCount={p.reviewCount} category={p.category} inStock={p.stockQty > 0} />
+          <ProductPriceBlock
+            displayPrice={p.displayPrice}
+            preDiscount={p.preDiscountDisplay}
+            discountPercent={p.discountPercent}
+            subcontinent={p.subcontinent}
+            currency={currency}
+            pricingNote={data.pricingNote}
+          />
           <p className="mt-6 text-sm leading-relaxed text-ink-900/75">{p.description}</p>
-          <dl className="mt-6 grid grid-cols-2 gap-3 text-sm">
-            <div className="rounded-2xl bg-white/60 p-3">
-              <dt className="text-xs font-bold uppercase tracking-wide text-ink-900/45">Material</dt>
-              <dd className="font-semibold text-ink-900">{p.material}</dd>
-            </div>
-            <div className="rounded-2xl bg-white/60 p-3">
-              <dt className="text-xs font-bold uppercase tracking-wide text-ink-900/45">Color</dt>
-              <dd className="font-semibold text-ink-900">{p.color}</dd>
-            </div>
-            <div className="rounded-2xl bg-white/60 p-3">
-              <dt className="text-xs font-bold uppercase tracking-wide text-ink-900/45">Capacity</dt>
-              <dd className="font-semibold text-ink-900">{p.capacityMl ? `${p.capacityMl} ml` : "—"}</dd>
-            </div>
-          </dl>
+          <ProductSpecsDl material={p.material} color={p.color} capacityMl={p.capacityMl} />
           <div className="mt-8">
             <ProductActions productId={p.id} slug={p.slug} />
           </div>
         </div>
       </div>
 
-      <section className="mt-14">
-        <h2 className="text-xl font-semibold text-ink-900">Reviews</h2>
-        <div className="mt-4 space-y-3">
-          {data.reviews.length === 0 && <p className="text-sm text-ink-900/55">No reviews yet — be the first.</p>}
-          {data.reviews.map((r) => (
-            <div key={r.id} className="rounded-3xl border border-white/60 bg-white/60 p-4">
-              <div className="text-xs font-bold text-ink-900/45">{r.userName}</div>
-              <div className="text-sm text-ink-900">★ {r.rating}</div>
-              {r.comment && <p className="mt-1 text-sm text-ink-900/75">{r.comment}</p>}
-            </div>
-          ))}
-        </div>
-      </section>
+      <ReviewsSection reviews={data.reviews} />
 
-      <section className="mt-14">
-        <h2 className="text-xl font-semibold text-ink-900">Related</h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {data.related.map((r) => (
-            <Link
-              key={r.id}
-              href={`/products/${r.slug}${curQs}`}
-              className="overflow-hidden rounded-3xl border border-white/60 bg-white/60 shadow-sm"
-            >
-              <div className="relative aspect-square bg-cream-100">
-                {r.imageUrl ? <Image src={r.imageUrl} alt="" fill className="object-cover" sizes="200px" /> : null}
-              </div>
-              <div className="p-3 text-sm font-semibold text-ink-900 line-clamp-2">{r.name}</div>
-              <div className="px-3 pb-3 text-sm font-bold">
-                {r.displayPrice?.formatted ?? `₹${(r.effectivePricePaise / 100).toFixed(0)}`}
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      <RelatedProductsSection items={data.related} curQs={curQs} currency={currency} />
     </div>
   );
 }

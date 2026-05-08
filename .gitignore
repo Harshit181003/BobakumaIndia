@@ -17,6 +17,7 @@ database/.mysql-data
 
 # Cursor local tooling
 mcps/
+terminals/
 
 # Local agent transcripts (do not commit)
 agent-transcripts/

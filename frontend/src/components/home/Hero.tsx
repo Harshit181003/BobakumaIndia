@@ -5,6 +5,7 @@ import { CurrencyLink } from "@/components/layout/CurrencyLink";
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import { useTranslation } from "react-i18next";
 
 function FloatingDot({
   className,
@@ -24,6 +25,7 @@ function FloatingDot({
 }
 
 export function Hero() {
+  const { t } = useTranslation();
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -47,9 +49,7 @@ export function Hero() {
               className="inline-flex items-center gap-2 rounded-full border border-mint-100/60 bg-white/80 px-4 py-2 shadow-soft backdrop-blur"
             >
               <span className="h-2 w-2 rounded-full bg-mint-500" />
-              <span className="text-sm font-medium text-ink-900">
-                White, mint, and candy-bright accents — Bobakuma energy.
-              </span>
+              <span className="text-sm font-medium text-ink-900">{t("home.heroBadge")}</span>
             </motion.div>
 
             <motion.h1
@@ -58,7 +58,7 @@ export function Hero() {
               transition={{ duration: 0.75, delay: 0.05 }}
               className="mt-6 text-balance text-4xl font-semibold tracking-tight text-ink-900 md:text-6xl"
             >
-              Lunchboxes that feel like a little gift—every day.
+              {t("home.heroTitle")}
             </motion.h1>
 
             <motion.p
@@ -67,8 +67,7 @@ export function Hero() {
               transition={{ duration: 0.7, delay: 0.12 }}
               className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-ink-900/70 md:text-lg"
             >
-              Stackable bentos, soft straps, and kawaii details inspired by the
-              lunchboxes you love. Built for school, work, and gifting.
+              {t("home.heroBody")}
             </motion.p>
 
             <motion.div
@@ -81,13 +80,19 @@ export function Hero() {
                 href="/products"
                 className="inline-flex justify-center rounded-3xl bg-ink-900 px-6 py-3 text-sm font-semibold text-cream-50 shadow-soft transition hover:translate-y-[-1px] hover:bg-ink-900/90 active:translate-y-0"
               >
-                Shop lunchboxes
+                {t("home.shopCta")}
               </CurrencyLink>
               <CurrencyLink
                 href="/products?category=KIDS"
                 className="inline-flex justify-center rounded-3xl bg-white/70 px-6 py-3 text-sm font-semibold text-ink-900 shadow-soft backdrop-blur transition hover:translate-y-[-1px] hover:bg-white/90 active:translate-y-0"
               >
-                Explore cute collections
+                {t("home.cuteCta")}
+              </CurrencyLink>
+              <CurrencyLink
+                href="/products?category=SHIRTS"
+                className="inline-flex justify-center rounded-3xl border border-mint-100/70 bg-mint-50/80 px-6 py-3 text-sm font-semibold text-ink-900 shadow-soft transition hover:translate-y-[-1px] active:translate-y-0"
+              >
+                {t("home.shopShirts")}
               </CurrencyLink>
             </motion.div>
           </div>
@@ -117,15 +122,11 @@ export function Hero() {
                   <div className="pointer-events-none absolute -bottom-6 left-1/2 w-[88%] -translate-x-1/2 rounded-3xl border border-mint-100/60 bg-white/90 p-4 shadow-soft backdrop-blur">
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="text-sm font-semibold text-ink-900">
-                          Two-tier bento
-                        </div>
-                        <div className="text-xs text-ink-900/60">
-                          Mint strap • leak-aware seal
-                        </div>
+                        <div className="text-sm font-semibold text-ink-900">{t("home.heroCardTitle")}</div>
+                        <div className="text-xs text-ink-900/60">{t("home.heroCardSub")}</div>
                       </div>
                       <div className="rounded-2xl bg-mint-100 px-3 py-2 text-sm font-semibold text-ink-900">
-                        From ₹899
+                        {t("home.heroCardFrom")}
                       </div>
                     </div>
                   </div>

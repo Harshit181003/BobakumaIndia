@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
@@ -9,13 +9,13 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/cn";
 import { apiFetch, clearTokens, getAccessToken } from "@/lib/api";
 import { LanguageSwitcher } from "./LanguageSwitcher";
-import { CurrencySwitcher } from "./CurrencySwitcher";
 import { CurrencyLink } from "./CurrencyLink";
 
 type Me = { user: { id: number; email: string | null; role: string; name: string | null } };
 
 export function Navbar() {
   const pathname = usePathname();
+  const sp = useSearchParams();
   const { t } = useTranslation();
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
@@ -35,10 +35,19 @@ export function Navbar() {
   const links = [
     { href: "/", label: t("nav.home") },
     { href: "/products", label: t("nav.products") },
+    { href: "/products?category=SHIRTS", label: t("nav.shirts") },
     { href: "/cart", label: t("nav.cart") },
     { href: "/wishlist", label: t("nav.wishlist") },
     { href: "/orders", label: t("nav.orders") }
   ];
+
+  function navItemActive(href: string) {
+    const [path, qs] = href.split("?");
+    if (pathname !== path) return false;
+    if (!qs) return !sp.get("category");
+    const want = new URLSearchParams(qs).get("category");
+    return sp.get("category") === want;
+  }
 
   const isAdmin = me?.role === "ADMIN" || me?.role === "SUPER_ADMIN";
 
@@ -63,7 +72,7 @@ export function Navbar() {
               href={l.href}
               className={cn(
                 "rounded-2xl px-3 py-2 text-sm font-medium text-ink-900/70 hover:bg-white/60 hover:text-ink-900",
-                pathname === l.href && "bg-white/70 text-ink-900 shadow-sm"
+                navItemActive(l.href) && "bg-white/70 text-ink-900 shadow-sm"
               )}
             >
               {l.label}
@@ -83,7 +92,6 @@ export function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <CurrencySwitcher />
           <LanguageSwitcher />
           <button
             type="button"
@@ -153,7 +161,6 @@ export function Navbar() {
                 {t("nav.admin")}
               </CurrencyLink>
             )}
-            <CurrencySwitcher className="w-full justify-center" />
             <LanguageSwitcher />
             <Link href="/login" onClick={() => setOpen(false)} className="rounded-2xl px-3 py-2 text-sm">
               {t("nav.login")}

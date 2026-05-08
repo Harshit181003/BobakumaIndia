@@ -12,8 +12,12 @@ export type DbUser = {
   is_active: 0 | 1;
 };
 
+function normalizeEmail(email: string) {
+  return email.trim().toLowerCase();
+}
+
 export async function findUserByEmail(email: string) {
-  const [rows] = await pool.query("SELECT * FROM users WHERE email = ? LIMIT 1", [email]);
+  const [rows] = await pool.query("SELECT * FROM users WHERE email = ? LIMIT 1", [normalizeEmail(email)]);
   return (rows as DbUser[])[0] ?? null;
 }
 
@@ -33,9 +37,10 @@ export async function createUserEmailPassword(input: {
   name?: string;
 }) {
   const passwordHash = await hashPassword(input.password);
+  const email = normalizeEmail(input.email);
   const [result] = await pool.query(
     "INSERT INTO users (email, password_hash, role, name, is_active) VALUES (?, ?, 'CUSTOMER', ?, 1)",
-    [input.email, passwordHash, input.name ?? null]
+    [email, passwordHash, input.name?.trim() || null]
   );
   const insertId = (result as { insertId: number }).insertId;
   return findUserById(insertId);
@@ -47,8 +52,9 @@ export async function createOrLinkGoogleUser(input: {
   name?: string | null;
   avatarUrl?: string | null;
 }) {
-  if (input.email) {
-    const existingByEmail = await findUserByEmail(input.email);
+  const emailNorm = input.email ? normalizeEmail(input.email) : null;
+  if (emailNorm) {
+    const existingByEmail = await findUserByEmail(emailNorm);
     if (existingByEmail) {
       await pool.query("UPDATE users SET google_id=?, name=COALESCE(name, ?), avatar_url=COALESCE(avatar_url, ?) WHERE id=?",
         [input.googleId, input.name ?? null, input.avatarUrl ?? null, existingByEmail.id]
@@ -59,7 +65,7 @@ export async function createOrLinkGoogleUser(input: {
 
   const [result] = await pool.query(
     "INSERT INTO users (email, google_id, role, name, avatar_url, is_active) VALUES (?, ?, 'CUSTOMER', ?, ?, 1)",
-    [input.email ?? null, input.googleId, input.name ?? null, input.avatarUrl ?? null]
+    [emailNorm, input.googleId, input.name ?? null, input.avatarUrl ?? null]
   );
   const insertId = (result as { insertId: number }).insertId;
   return findUserById(insertId);

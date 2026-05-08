@@ -1,5 +1,5 @@
+import { Suspense } from "react";
 import { Hero } from "@/components/home/Hero";
-import { SubcontinentPricingIntro } from "@/components/home/SubcontinentPricingIntro";
 import {
   CollectionsRow,
   FeaturedCarousel,
@@ -25,10 +25,11 @@ type ListRes = {
   }>;
 };
 
-async function getFeatured(currency: string): Promise<ListRes["items"]> {
+async function fetchProducts(currency: string, category?: string): Promise<ListRes["items"]> {
   const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000";
+  const cat = category ? `&category=${encodeURIComponent(category)}` : "";
   try {
-    const res = await fetch(`${base}/api/products?pageSize=8&sort=newest&currency=${encodeURIComponent(currency)}`, {
+    const res = await fetch(`${base}/api/products?pageSize=8&sort=newest&currency=${encodeURIComponent(currency)}${cat}`, {
       next: { revalidate: 30 }
     });
     if (!res.ok) return [];
@@ -46,16 +47,24 @@ export default async function HomePage({
 }) {
   const sp = await searchParams;
   const currency = sp.currency ? parseDisplayCurrency(sp.currency) : await getCurrencyFromCookies();
-  const featured = await getFeatured(currency);
+  const [featured, shirtItems] = await Promise.all([fetchProducts(currency), fetchProducts(currency, "SHIRTS")]);
+
   return (
     <div className="min-h-screen">
-      <SubcontinentPricingIntro />
       <Hero />
       <CollectionsRow />
       <SizesRow />
       <PromoTiles />
       <OffersBanner />
-      <FeaturedCarousel items={featured} currency={currency} />
+      <Suspense fallback={<div className="mx-auto h-40 max-w-6xl px-4 text-center text-sm text-ink-900/50">Loading…</div>}>
+        <FeaturedCarousel items={featured} currency={currency} titleKey="home.featured" shopHref="/products" />
+        <FeaturedCarousel
+          items={shirtItems}
+          currency={currency}
+          titleKey="home.featuredShirts"
+          shopHref="/products?category=SHIRTS"
+        />
+      </Suspense>
       <InstagramGallery />
       <Testimonials />
       <Newsletter />

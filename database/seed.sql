@@ -91,13 +91,68 @@ ON DUPLICATE KEY UPDATE
   stock_qty=VALUES(stock_qty),
   is_active=VALUES(is_active);
 
+-- Graphic tees (category SHIRTS)
+INSERT INTO products
+  (name, slug, description, category, material, capacity_ml, color, price_paise, discount_percent, stock_qty, is_active)
+VALUES
+  (
+    'Bobakuma Mint Graphic Tee',
+    'bobakuma-mint-graphic-tee',
+    'Soft cotton tee with mint Bobakuma-inspired graphic. Relaxed fit, pastel print, easy everyday wear.',
+    'SHIRTS',
+    'COTTON',
+    NULL,
+    'Mint / White',
+    79900,
+    0,
+    150,
+    1
+  ),
+  (
+    'Pastel Boba Pocket Tee',
+    'pastel-boba-pocket-tee',
+    'Lightweight tee with cute boba pocket print. Pairs perfectly with our lunchbox colors.',
+    'SHIRTS',
+    'COTTON',
+    NULL,
+    'Lavender',
+    69900,
+    5,
+    180,
+    1
+  ),
+  (
+    'Kawaii Lunch Crewneck Tee',
+    'kawaii-lunch-crew-tee',
+    'Crewneck with kawaii lunch doodles. Comfy for school runs and weekend markets.',
+    'SHIRTS',
+    'COTTON_BLEND',
+    NULL,
+    'Cream',
+    84900,
+    8,
+    130,
+    1
+  )
+ON DUPLICATE KEY UPDATE
+  name=VALUES(name),
+  description=VALUES(description),
+  color=VALUES(color),
+  price_paise=VALUES(price_paise),
+  discount_percent=VALUES(discount_percent),
+  stock_qty=VALUES(stock_qty),
+  is_active=VALUES(is_active);
+
 DELETE pi FROM product_images pi
 INNER JOIN products p ON p.id = pi.product_id
 WHERE p.slug IN (
   'bento-blossom-lunchbox',
   'office-zen-steel-lunchbox',
   'peach-pop-mini-tiffin',
-  'cream-cloud-glass-lunchbox'
+  'cream-cloud-glass-lunchbox',
+  'bobakuma-mint-graphic-tee',
+  'pastel-boba-pocket-tee',
+  'kawaii-lunch-crew-tee'
 );
 
 INSERT INTO product_images (product_id, url, alt_text, sort_order)
@@ -166,4 +221,34 @@ JOIN (
          'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=1200&q=80',
          'Fresh lunch spread',
          2
+  UNION ALL
+  SELECT 'bobakuma-mint-graphic-tee',
+         'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=80',
+         'Mint graphic tee flat lay',
+         0
+  UNION ALL
+  SELECT 'bobakuma-mint-graphic-tee',
+         'https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=1200&q=80',
+         'Pastel t-shirts on hanger',
+         1
+  UNION ALL
+  SELECT 'pastel-boba-pocket-tee',
+         'https://images.unsplash.com/photo-1576566588028-4147f384a1d9?auto=format&fit=crop&w=1200&q=80',
+         'Purple pastel tee',
+         0
+  UNION ALL
+  SELECT 'pastel-boba-pocket-tee',
+         'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=1200&q=80',
+         'Folded cotton tees',
+         1
+  UNION ALL
+  SELECT 'kawaii-lunch-crew-tee',
+         'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1200&q=80',
+         'Cream crewneck tee',
+         0
+  UNION ALL
+  SELECT 'kawaii-lunch-crew-tee',
+         'https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=1200&q=80',
+         'Graphic tee detail',
+         1
 ) i ON i.slug = p.slug;

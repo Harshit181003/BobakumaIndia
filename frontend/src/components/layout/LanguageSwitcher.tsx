@@ -20,12 +20,15 @@ const labels: Record<string, string> = {
 
 export function LanguageSwitcher() {
   const { i18n } = useTranslation();
+  const raw = i18n.resolvedLanguage ?? i18n.language ?? "en";
+  const current = raw.split("-")[0] ?? "en";
+  const value = locales.includes(current as (typeof locales)[number]) ? current : "en";
   return (
     <label className="flex items-center gap-2 text-xs font-medium text-ink-900/70">
       <span className="hidden sm:inline">Lang</span>
       <select
         className="rounded-2xl border border-white/60 bg-white/70 px-2 py-1 text-xs font-semibold text-ink-900 shadow-sm outline-none backdrop-blur"
-        value={i18n.language}
+        value={value}
         onChange={(e) => void i18n.changeLanguage(e.target.value)}
       >
         {locales.map((l) => (

@@ -15,9 +15,9 @@ import { requireAuth, type AuthedRequest } from "../middleware/auth.js";
 export const authRouter = Router();
 
 const registerSchema = z.object({
-  email: z.string().email(),
+  email: z.string().trim().toLowerCase().email(),
   password: z.string().min(8).max(100),
-  name: z.string().min(1).max(120).optional()
+  name: z.string().trim().min(1).max(120).optional()
 });
 
 authRouter.post("/register", async (req, res) => {
@@ -40,7 +40,7 @@ authRouter.post("/register", async (req, res) => {
 });
 
 const loginSchema = z.object({
-  email: z.string().email(),
+  email: z.string().trim().toLowerCase().email(),
   password: z.string().min(1)
 });
 

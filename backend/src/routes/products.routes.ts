@@ -7,7 +7,7 @@ export const productsRouter = Router();
 
 const listQuerySchema = z.object({
   q: z.string().optional(),
-  category: z.enum(["KIDS", "OFFICE"]).optional(),
+  category: z.enum(["KIDS", "OFFICE", "SHIRTS"]).optional(),
   material: z.string().optional(),
   color: z.string().optional(),
   minPrice: z.coerce.number().int().optional(),
