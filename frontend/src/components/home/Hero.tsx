@@ -142,7 +142,7 @@ export function Hero() {
           </div>
 
           <div className="relative">
-            <div className="relative mx-auto aspect-square max-w-md rounded-[2.25rem] border border-white/70 bg-white/50 p-6 shadow-soft backdrop-blur">
+            <div className="relative mx-auto aspect-square max-w-md overflow-hidden rounded-[2.25rem] border border-white/70 bg-white/50 p-6 shadow-soft backdrop-blur">
               <DoodleScribble className="pointer-events-none absolute -left-10 -top-8 h-28 w-56 text-ink-900" />
               <DoodleScribble className="pointer-events-none absolute -bottom-10 -right-10 h-28 w-56 rotate-180 text-ink-900" />
               <FloatingDot className="absolute -left-6 top-12 h-10 w-10 rounded-full bg-mint-100 blur-[1px]" delay={0} />
@@ -162,7 +162,7 @@ export function Hero() {
                 >
                   <img
                     alt="Stacked white bento lunchbox"
-                    src="https://images.unsplash.com/photo-1587734193613-12eaf7e0e4d1?auto=format&fit=crop&w=1000&q=80"
+                    src="/ref.jpg"
                     className="h-72 w-72 rounded-[2rem] object-cover shadow-soft ring-2 ring-white/80 md:h-80 md:w-80"
                   />
                   <div className="pointer-events-none absolute -bottom-6 left-1/2 w-[88%] -translate-x-1/2 rounded-3xl border border-mint-100/60 bg-white/90 p-4 shadow-soft backdrop-blur">
