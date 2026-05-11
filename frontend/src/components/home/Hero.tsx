@@ -53,7 +53,9 @@ export function Hero() {
     const el = heroRef.current;
     if (!el) return;
     const ctx = gsap.context(() => {
-      gsap.from(".hero-float", { y: 16, opacity: 0, duration: 0.9, stagger: 0.12, ease: "power3.out" });
+      // Only animate CTAs — do not target the product image column (same class used to cause
+      // opacity:0 to stick after Strict Mode / revert, so the hero photo "flashes then vanishes").
+      gsap.from(".hero-float-cta", { y: 16, opacity: 0, duration: 0.9, stagger: 0.12, ease: "power3.out" });
     }, el);
     return () => ctx.revert();
   }, []);
@@ -118,7 +120,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.18 }}
-              className="hero-float mt-8 flex flex-col gap-3 sm:flex-row"
+              className="hero-float-cta mt-8 flex flex-col gap-3 sm:flex-row"
             >
               <CurrencyLink
                 href="/products"
@@ -153,7 +155,7 @@ export function Hero() {
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.7, delay: 0.08 }}
-                className="hero-float grid h-full place-items-center"
+                className="grid h-full place-items-center"
               >
                 <motion.div
                   animate={{ y: [0, -10, 0], rotate: [0, -1.2, 0] }}
@@ -162,7 +164,7 @@ export function Hero() {
                 >
                   <img
                     alt="Stacked white bento lunchbox"
-                    src="/ref.jpg"
+                    src="/ref.jpeg"
                     className="h-72 w-72 rounded-[2rem] object-cover shadow-soft ring-2 ring-white/80 md:h-80 md:w-80"
                   />
                   <div className="pointer-events-none absolute -bottom-6 left-1/2 w-[88%] -translate-x-1/2 rounded-3xl border border-mint-100/60 bg-white/90 p-4 shadow-soft backdrop-blur">
