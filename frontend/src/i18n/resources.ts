@@ -90,7 +90,39 @@ export const en = {
     sizeDaily: "Daily meals",
     sizeBig: "Big appetite",
     sizeFamily: "Family share",
-    sizeMealprep: "Meal prep"
+    sizeMealprep: "Meal prep",
+
+    uspLeakTitle: "Leak‑resistant, morning‑proof",
+    uspLeakBody: "Pack once. No stress, no spills—just a calm start.",
+    uspEcoTitle: "Eco‑friendly materials",
+    uspEcoBody: "Reusable, durable, and made for everyday parenting moments.",
+    uspPremiumTitle: "Premium, realistic design",
+    uspPremiumBody: "Soft pastels, clean lines, luxury whitespace. Looks as good as it works.",
+
+    guideLabel: "Guide",
+    guideTitle: "Choose in 10 seconds",
+    guideBody: "If you’re new to lunchboxes: start with size, then pick a use‑case. We’ll guide you.",
+    guideShopAll: "Shop all",
+    guideKidsTitle: "Kids (school)",
+    guideKidsBody: "Compact, easy compartments, snack‑friendly.",
+    guideOfficeTitle: "Office (work)",
+    guideOfficeBody: "Clean look, sturdy, easy to carry.",
+    guideAccessoriesTitle: "Accessories",
+    guideAccessoriesBody: "Extra containers, cutlery, & add‑ons.",
+
+    recipesLabel: "Recipes",
+    recipesTitle: "Easy packs for calm mornings",
+    recipesFreeBook: "Free recipe book with select drops",
+    recipesBlockTitle: "Lunchbots‑style recipes",
+    recipesBlockBody: "Simple, realistic, and made to keep—so you don’t have to think every morning.",
+    recipesWeekTitle: "This week’s quick ideas",
+    recipesWantCodeTitle: "Want a code?",
+    recipesWantCodeBody: "We don’t do discounts. Join monthly challenges to earn a reward code.",
+
+    videoReviewsLabel: "Reviews",
+    videoReviewsTitle: "Real parents. Real ratings.",
+    videoReviewsBody: "Short, calm clips—plus verified star ratings.",
+    videoReviewsCta: "See all reviews →"
   },
   products: {
     title: "Shop lunchboxes & shirts",

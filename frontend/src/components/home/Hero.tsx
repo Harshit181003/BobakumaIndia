@@ -24,6 +24,27 @@ function FloatingDot({
   );
 }
 
+function DoodleScribble({ className }: { className: string }) {
+  return (
+    <svg className={className} viewBox="0 0 240 120" fill="none" aria-hidden>
+      <path
+        d="M10 70c25-28 48-44 86-42 48 2 56 52 92 52 22 0 35-10 42-18"
+        stroke="currentColor"
+        strokeOpacity="0.16"
+        strokeWidth="6"
+        strokeLinecap="round"
+      />
+      <path
+        d="M24 92c18-14 44-30 76-28 36 2 44 30 74 30 20 0 40-12 52-24"
+        stroke="currentColor"
+        strokeOpacity="0.12"
+        strokeWidth="5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function Hero() {
   const { t } = useTranslation();
   const heroRef = useRef<HTMLDivElement>(null);
@@ -38,8 +59,11 @@ export function Hero() {
   }, []);
 
   return (
-    <section ref={heroRef} className="relative overflow-hidden">
-      <div className="mx-auto max-w-6xl px-4 py-16 md:py-24">
+    <section
+      ref={heroRef}
+      className="relative overflow-hidden bg-gradient-to-b from-mint-50/70 via-cream-50 to-white"
+    >
+      <div className="mx-auto max-w-6xl px-4 py-20 md:py-28">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <div>
             <motion.div
@@ -73,6 +97,26 @@ export function Hero() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.14 }}
+              className="mt-7 flex flex-wrap gap-2"
+            >
+              <span className="rounded-full border border-white/70 bg-white/70 px-3 py-1 text-xs font-semibold text-ink-900/70 shadow-soft backdrop-blur">
+                {t("home.uspLeakTitle")}
+              </span>
+              <span className="rounded-full border border-white/70 bg-white/70 px-3 py-1 text-xs font-semibold text-ink-900/70 shadow-soft backdrop-blur">
+                {t("home.uspEcoTitle")}
+              </span>
+              <span className="rounded-full border border-white/70 bg-white/70 px-3 py-1 text-xs font-semibold text-ink-900/70 shadow-soft backdrop-blur">
+                {t("home.uspPremiumTitle")}
+              </span>
+              <span className="rounded-full border border-white/70 bg-white/70 px-3 py-1 text-xs font-semibold text-ink-900/70 shadow-soft backdrop-blur">
+                {t("home.pickVibe")}
+              </span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.18 }}
               className="hero-float mt-8 flex flex-col gap-3 sm:flex-row"
             >
@@ -98,7 +142,9 @@ export function Hero() {
           </div>
 
           <div className="relative">
-            <div className="relative mx-auto aspect-square max-w-md rounded-[2rem] border border-mint-100/50 bg-gradient-to-br from-white/90 to-mint-50/80 p-6 shadow-soft backdrop-blur">
+            <div className="relative mx-auto aspect-square max-w-md rounded-[2.25rem] border border-white/70 bg-white/50 p-6 shadow-soft backdrop-blur">
+              <DoodleScribble className="pointer-events-none absolute -left-10 -top-8 h-28 w-56 text-ink-900" />
+              <DoodleScribble className="pointer-events-none absolute -bottom-10 -right-10 h-28 w-56 rotate-180 text-ink-900" />
               <FloatingDot className="absolute -left-6 top-12 h-10 w-10 rounded-full bg-mint-100 blur-[1px]" delay={0} />
               <FloatingDot className="absolute -right-8 top-24 h-14 w-14 rounded-full bg-peach-100 blur-[1px]" delay={0.6} />
               <FloatingDot className="absolute bottom-10 left-6 h-12 w-12 rounded-full bg-blush-100 blur-[1px]" delay={1.2} />
@@ -116,8 +162,8 @@ export function Hero() {
                 >
                   <img
                     alt="Stacked white bento lunchbox"
-                    src="https://images.unsplash.com/photo-1587734193613-12eaf7e0e4d1?auto=format&fit=crop&w=900&q=80"
-                    className="h-64 w-64 rounded-3xl object-cover shadow-soft ring-2 ring-mint-100/80 md:h-72 md:w-72"
+                    src="https://images.unsplash.com/photo-1587734193613-12eaf7e0e4d1?auto=format&fit=crop&w=1000&q=80"
+                    className="h-72 w-72 rounded-[2rem] object-cover shadow-soft ring-2 ring-white/80 md:h-80 md:w-80"
                   />
                   <div className="pointer-events-none absolute -bottom-6 left-1/2 w-[88%] -translate-x-1/2 rounded-3xl border border-mint-100/60 bg-white/90 p-4 shadow-soft backdrop-blur">
                     <div className="flex items-center justify-between">

@@ -1,14 +1,18 @@
 import { Suspense } from "react";
 import { Hero } from "@/components/home/Hero";
 import {
+  ChoosingGuide,
   CollectionsRow,
   FeaturedCarousel,
   InstagramGallery,
   Newsletter,
   OffersBanner,
   PromoTiles,
+  RecipesRow,
   SizesRow,
-  Testimonials
+  Testimonials,
+  UspsRow,
+  VideoReviewsRow
 } from "@/components/home/HomeSections";
 import { parseDisplayCurrency } from "@/lib/currency";
 import { getCurrencyFromCookies } from "@/lib/currency.server";
@@ -52,9 +56,12 @@ export default async function HomePage({
   return (
     <div className="min-h-screen">
       <Hero />
+      <UspsRow />
       <CollectionsRow />
+      <ChoosingGuide />
       <SizesRow />
       <PromoTiles />
+      <RecipesRow />
       <OffersBanner />
       <Suspense fallback={<div className="mx-auto h-40 max-w-6xl px-4 text-center text-sm text-ink-900/50">Loading…</div>}>
         <FeaturedCarousel items={featured} currency={currency} titleKey="home.featured" shopHref="/products" />
@@ -66,6 +73,7 @@ export default async function HomePage({
         />
       </Suspense>
       <InstagramGallery />
+      <VideoReviewsRow />
       <Testimonials />
       <Newsletter />
     </div>

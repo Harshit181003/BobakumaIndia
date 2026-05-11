@@ -337,6 +337,256 @@ export function PromoTiles() {
   );
 }
 
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden>
+      <path d="M20 7 10.5 16.5 4 10" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function UspsRow() {
+  const { t } = useTranslation();
+  return (
+    <section className="mx-auto max-w-6xl px-4 pb-10">
+      <div className="grid gap-3 md:grid-cols-3">
+        {[
+          {
+            title: t("home.uspLeakTitle"),
+            body: t("home.uspLeakBody"),
+            bg: "from-mint-50 via-white to-cream-50"
+          },
+          {
+            title: t("home.uspEcoTitle"),
+            body: t("home.uspEcoBody"),
+            bg: "from-cream-50 via-white to-lavender-50"
+          },
+          {
+            title: t("home.uspPremiumTitle"),
+            body: t("home.uspPremiumBody"),
+            bg: "from-blush-50 via-white to-peach-50"
+          }
+        ].map((x, i) => (
+          <motion.div
+            key={x.title}
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.06 }}
+            className={`rounded-[2rem] border border-white/70 bg-gradient-to-br ${x.bg} p-6 shadow-soft`}
+          >
+            <div className="flex items-start gap-3">
+              <div className="grid h-10 w-10 place-items-center rounded-2xl bg-white/70 text-ink-900/70 shadow-soft">
+                <CheckIcon />
+              </div>
+              <div>
+                <div className="text-lg font-semibold tracking-tight text-ink-900">{x.title}</div>
+                <p className="mt-1 text-sm leading-relaxed text-ink-900/70">{x.body}</p>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export function ChoosingGuide() {
+  const { t } = useTranslation();
+  return (
+    <section className="mx-auto max-w-6xl px-4 py-10">
+      <div className="rounded-[2rem] border border-white/70 bg-white/70 p-6 shadow-soft backdrop-blur md:p-10">
+        <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
+          <div>
+            <div className="text-xs font-bold uppercase tracking-widest text-ink-900/45">{t("home.guideLabel")}</div>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ink-900 md:text-3xl">{t("home.guideTitle")}</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-900/70">
+              {t("home.guideBody")}
+            </p>
+          </div>
+          <CurrencyLink href="/products" className="text-sm font-semibold text-lavender-500 hover:underline">
+            {t("home.guideShopAll")}
+          </CurrencyLink>
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          {[
+            { title: t("home.guideKidsTitle"), body: t("home.guideKidsBody"), href: "/products?category=KIDS" },
+            { title: t("home.guideOfficeTitle"), body: t("home.guideOfficeBody"), href: "/products?category=OFFICE" },
+            { title: t("home.guideAccessoriesTitle"), body: t("home.guideAccessoriesBody"), href: "/products" }
+          ].map((x) => (
+            <CurrencyLink
+              key={x.title}
+              href={x.href}
+              className="group rounded-[2rem] border border-white/70 bg-white/80 p-6 shadow-soft transition hover:translate-y-[-1px]"
+            >
+              <div className="text-lg font-semibold text-ink-900">{x.title}</div>
+              <div className="mt-2 text-sm text-ink-900/65">{x.body}</div>
+              <div className="mt-4 text-xs font-bold uppercase tracking-widest text-ink-900/45 group-hover:text-ink-900/60">
+                {t("home.explore")}
+              </div>
+            </CurrencyLink>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const easyRecipes = [
+  { title: "3‑ingredient veggie wrap", time: "6 min", note: "Stays fresh, packs flat." },
+  { title: "Paneer + fruit box", time: "8 min", note: "Protein + sweet, kid‑friendly." },
+  { title: "Cold pasta (no‑mess)", time: "10 min", note: "Great for office + school." },
+  { title: "Idli snack set", time: "7 min", note: "Mini idlis + dip + fruit." }
+];
+
+function PlayIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden>
+      <path d="M9 7.6v8.8c0 .8.9 1.3 1.6.9l7-4.4c.7-.4.7-1.4 0-1.8l-7-4.4c-.7-.4-1.6.1-1.6.9Z" />
+    </svg>
+  );
+}
+
+const videoReviews = [
+  {
+    name: "Ananya",
+    rating: 5,
+    label: "No leaks in the school bag.",
+    poster: "https://images.unsplash.com/photo-1587734193613-12eaf7e0e4d1?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    name: "Rahul",
+    rating: 5,
+    label: "Looks premium on my desk.",
+    poster: "https://images.unsplash.com/photo-1615485920415-680443d9688c?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    name: "Meera",
+    rating: 4,
+    label: "Easy to pack, easy to clean.",
+    poster: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80"
+  }
+];
+
+function Stars({ n }: { n: number }) {
+  return (
+    <div className="flex items-center gap-0.5 text-ink-900">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <span key={i} className={i < n ? "opacity-90" : "opacity-25"}>
+          ★
+        </span>
+      ))}
+    </div>
+  );
+}
+
+export function VideoReviewsRow() {
+  const { t } = useTranslation();
+  return (
+    <section className="mx-auto max-w-6xl px-4 py-12">
+      <div className="mb-6 flex items-end justify-between gap-4">
+        <div>
+          <div className="text-xs font-bold uppercase tracking-widest text-ink-900/45">{t("home.videoReviewsLabel")}</div>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ink-900 md:text-3xl">{t("home.videoReviewsTitle")}</h2>
+          <p className="mt-2 max-w-2xl text-sm text-ink-900/70">{t("home.videoReviewsBody")}</p>
+        </div>
+        <CurrencyLink href="/products" className="text-sm font-semibold text-lavender-500 hover:underline">
+          {t("home.videoReviewsCta")}
+        </CurrencyLink>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        {videoReviews.map((r, i) => (
+          <motion.button
+            key={r.name}
+            type="button"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.08 }}
+            className="group overflow-hidden rounded-[2rem] border border-white/70 bg-white/70 text-left shadow-soft backdrop-blur"
+            onClick={() => alert("Video reviews coming next — we’ll plug real customer clips here.")}
+          >
+            <div className="relative aspect-[4/3] bg-cream-100">
+              <img src={r.poster} alt="" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+              <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-2 text-xs font-semibold text-ink-900 shadow-soft backdrop-blur">
+                <span className="grid h-7 w-7 place-items-center rounded-full bg-ink-900 text-cream-50">
+                  <PlayIcon />
+                </span>
+                Video
+              </div>
+            </div>
+            <div className="p-5">
+              <div className="flex items-center justify-between gap-3">
+                <div className="text-sm font-semibold text-ink-900">{r.name}</div>
+                <Stars n={r.rating} />
+              </div>
+              <div className="mt-2 text-sm text-ink-900/70">&ldquo;{r.label}&rdquo;</div>
+            </div>
+          </motion.button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export function RecipesRow() {
+  const { t } = useTranslation();
+  return (
+    <section className="mx-auto max-w-6xl px-4 py-12">
+      <div className="mb-6 flex items-end justify-between gap-4">
+        <div>
+          <div className="text-xs font-bold uppercase tracking-widest text-ink-900/45">{t("home.recipesLabel")}</div>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ink-900 md:text-3xl">{t("home.recipesTitle")}</h2>
+        </div>
+        <span className="text-sm font-semibold text-ink-900/55">{t("home.recipesFreeBook")}</span>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-[2rem] border border-white/70 bg-gradient-to-br from-mint-50 via-white to-cream-50 p-7 shadow-soft">
+          <div className="text-lg font-semibold text-ink-900">{t("home.recipesBlockTitle")}</div>
+          <p className="mt-2 text-sm leading-relaxed text-ink-900/70">
+            {t("home.recipesBlockBody")}
+          </p>
+          <div className="mt-5 grid gap-3">
+            {easyRecipes.slice(0, 2).map((r) => (
+              <div key={r.title} className="rounded-3xl border border-white/70 bg-white/80 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="text-sm font-semibold text-ink-900">{r.title}</div>
+                  <div className="text-xs font-bold text-ink-900/45">{r.time}</div>
+                </div>
+                <div className="mt-1 text-xs text-ink-900/60">{r.note}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-[2rem] border border-white/70 bg-white/70 p-7 shadow-soft backdrop-blur">
+          <div className="text-lg font-semibold text-ink-900">{t("home.recipesWeekTitle")}</div>
+          <div className="mt-4 grid gap-3">
+            {easyRecipes.slice(2).map((r) => (
+              <div key={r.title} className="rounded-3xl border border-white/70 bg-white/80 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="text-sm font-semibold text-ink-900">{r.title}</div>
+                  <div className="text-xs font-bold text-ink-900/45">{r.time}</div>
+                </div>
+                <div className="mt-1 text-xs text-ink-900/60">{r.note}</div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-5 rounded-3xl border border-white/70 bg-gradient-to-br from-lavender-50 via-white to-blush-50 p-5">
+            <div className="text-sm font-semibold text-ink-900">{t("home.recipesWantCodeTitle")}</div>
+            <p className="mt-1 text-xs text-ink-900/65">
+              {t("home.recipesWantCodeBody")}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 const gallerySrc = [
   "https://images.unsplash.com/photo-1587734193613-12eaf7e0e4d1?auto=format&fit=crop&w=600&q=80",
   "https://images.unsplash.com/photo-1615485920415-680443d9688c?auto=format&fit=crop&w=600&q=80",

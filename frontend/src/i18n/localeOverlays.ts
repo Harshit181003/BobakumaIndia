@@ -78,7 +78,39 @@ export const hiOverlay = {
     sizeDaily: "रोज़ाना भोजन",
     sizeBig: "बड़ी भूख",
     sizeFamily: "फ़ैमिली शेयर",
-    sizeMealprep: "मील प्रेप"
+    sizeMealprep: "मील प्रेप",
+
+    uspLeakTitle: "लीक‑रेज़िस्टेंट, मॉर्निंग‑प्रूफ",
+    uspLeakBody: "एक बार पैक करें। बिना तनाव, बिना रिसाव।",
+    uspEcoTitle: "इको‑फ्रेंडली मटीरियल",
+    uspEcoBody: "रीयूजेबल, टिकाऊ, और पैरेंटिंग के लिए परफेक्ट।",
+    uspPremiumTitle: "प्रीमियम, रियल‑लाइफ डिज़ाइन",
+    uspPremiumBody: "सॉफ्ट पेस्टल, साफ़ लाइन्स, लग्ज़री स्पेस। जितना सुंदर, उतना उपयोगी।",
+
+    guideLabel: "गाइड",
+    guideTitle: "10 सेकंड में चुनें",
+    guideBody: "अगर आप नए हैं: पहले साइज़ चुनें, फिर उपयोग‑केस। हम मदद करेंगे।",
+    guideShopAll: "सभी देखें",
+    guideKidsTitle: "बच्चे (स्कूल)",
+    guideKidsBody: "कॉम्पैक्ट, आसान कम्पार्टमेंट, स्नैक‑फ्रेंडली।",
+    guideOfficeTitle: "ऑफिस (वर्क)",
+    guideOfficeBody: "क्लीन लुक, मज़बूत, कैरी करना आसान।",
+    guideAccessoriesTitle: "एक्सेसरीज़",
+    guideAccessoriesBody: "एक्स्ट्रा कंटेनर, कटलरी और ऐड‑ऑन।",
+
+    recipesLabel: "रेसिपीज़",
+    recipesTitle: "कैल्म मॉर्निंग के लिए आसान पैक",
+    recipesFreeBook: "चुने हुए ड्रॉप्स पर फ्री रेसिपी बुक",
+    recipesBlockTitle: "Lunchbots‑स्टाइल रेसिपीज़",
+    recipesBlockBody: "सरल, वास्तविक, और सेव करने लायक — ताकि रोज़ सोचना न पड़े।",
+    recipesWeekTitle: "इस हफ्ते के क्विक आइडियाज़",
+    recipesWantCodeTitle: "कोड चाहिए?",
+    recipesWantCodeBody: "हम डिस्काउंट नहीं देते। चुनौतियों में हिस्सा लें और रिवार्ड कोड पाएँ।",
+
+    videoReviewsLabel: "रिव्यू",
+    videoReviewsTitle: "असली पैरेंट्स. असली रेटिंग्स.",
+    videoReviewsBody: "छोटे, शांत क्लिप्स — साथ में वेरिफ़ाइड स्टार रेटिंग्स।",
+    videoReviewsCta: "सभी रिव्यू देखें →"
   },
   products: {
     title: "लंचबॉक्स और शर्ट शॉप करें",
