@@ -3,6 +3,7 @@
 import type React from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { getPersistedCurrency } from "@/lib/currencyPersist";
 import { parseDisplayCurrency } from "@/lib/currency";
 
@@ -23,7 +24,15 @@ export function CurrencyLink({
   href: string;
 }) {
   const sp = useSearchParams();
-  const cur = parseDisplayCurrency(sp.get("currency") ?? getPersistedCurrency());
+  const fromUrl = useMemo(() => parseDisplayCurrency(sp.get("currency") ?? undefined), [sp]);
+  const [persisted, setPersisted] = useState<string | null>(null);
+
+  useEffect(() => {
+    setPersisted(getPersistedCurrency());
+  }, []);
+
+  // Important: during SSR + first client paint, only rely on URL so href matches hydration.
+  const cur = fromUrl ?? parseDisplayCurrency(persisted ?? undefined);
   const finalHref = withCurrency(href, cur);
   return <Link href={finalHref} {...props} />;
 }

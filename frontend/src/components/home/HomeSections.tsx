@@ -453,19 +453,19 @@ const videoReviews = [
     name: "Ananya",
     rating: 5,
     label: "No leaks in the school bag.",
-    poster: "/hero-1.jpg"
+    poster: "/hero-1.jpeg"
   },
   {
     name: "Rahul",
     rating: 5,
     label: "Looks premium on my desk.",
-    poster: "/hero-2.jpg"
+    poster: "/hero-2.jpeg"
   },
   {
     name: "Meera",
     rating: 4,
     label: "Easy to pack, easy to clean.",
-    poster: "/family.jpg"
+    poster: "/family.jpeg"
   }
 ];
 
@@ -588,10 +588,10 @@ export function RecipesRow() {
 }
 
 const gallerySrc = [
-  "/ref.jpg",
-  "/hero-1.jpg",
-  "/hero-2.jpg",
-  "/family.jpg",
+  "/ref.jpeg",
+  "/hero-1.jpeg",
+  "/hero-2.jpeg",
+  "/family.jpeg",
   "https://images.unsplash.com/photo-1594398907494-9f3f9d6949b8?auto=format&fit=crop&w=600&q=80",
   "https://images.unsplash.com/photo-1526318896980-cf78c088247c?auto=format&fit=crop&w=600&q=80",
   "https://images.unsplash.com/photo-1543363136-5ae0b0077b99?auto=format&fit=crop&w=600&q=80"
