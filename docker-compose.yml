@@ -9,6 +9,6 @@ services:
       MYSQL_PASSWORD: bobakuma_password
       MYSQL_ROOT_PASSWORD: root_password_change_me
     ports:
-      - "3307:3307"
+      - "3307:3306"
     volumes:
       - ./database/.mysql-data:/var/lib/mysql
