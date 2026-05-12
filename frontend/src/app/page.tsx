@@ -3,7 +3,9 @@ import { Hero } from "@/components/home/Hero";
 import {
   ChoosingGuide,
   CollectionsRow,
+  ShirtsPromoRow,
   FeaturedCarousel,
+  FeaturedCarouselSkeleton,
   InstagramGallery,
   Newsletter,
   OffersBanner,
@@ -16,6 +18,7 @@ import {
 } from "@/components/home/HomeSections";
 import { parseDisplayCurrency } from "@/lib/currency";
 import { getCurrencyFromCookies } from "@/lib/currency.server";
+import { getServerApiBase } from "@/lib/serverApiBase";
 
 type ListRes = {
   items: Array<{
@@ -30,11 +33,11 @@ type ListRes = {
 };
 
 async function fetchProducts(currency: string, category?: string): Promise<ListRes["items"]> {
-  const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000";
+  const base = getServerApiBase();
   const cat = category ? `&category=${encodeURIComponent(category)}` : "";
   try {
     const res = await fetch(`${base}/api/products?pageSize=8&sort=newest&currency=${encodeURIComponent(currency)}${cat}`, {
-      next: { revalidate: 30 }
+      cache: "no-store"
     });
     if (!res.ok) return [];
     const data = (await res.json()) as ListRes;
@@ -58,13 +61,21 @@ export default async function HomePage({
       <Hero />
       <UspsRow />
       <CollectionsRow />
+      <ShirtsPromoRow />
       <ChoosingGuide />
       <SizesRow />
       <PromoTiles />
       <RecipesRow />
       <OffersBanner />
-      <Suspense fallback={<div className="mx-auto h-40 max-w-6xl px-4 text-center text-sm text-ink-900/50">Loading…</div>}>
-        <FeaturedCarousel items={featured} currency={currency} titleKey="home.featured" shopHref="/products" />
+      <Suspense
+        fallback={
+          <>
+            <FeaturedCarouselSkeleton titleKey="home.featured" />
+            <FeaturedCarouselSkeleton titleKey="home.featuredShirts" />
+          </>
+        }
+      >
+        <FeaturedCarousel items={featured} currency={currency} titleKey="home.featured" shopHref="/products?category=LUNCHBOX" />
         <FeaturedCarousel
           items={shirtItems}
           currency={currency}

@@ -1,4 +1,26 @@
-const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000";
+/** Shown in error messages; real fetch URL is chosen in `apiFetch`. */
+export const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:4000";
+
+function isLoopbackApiBase(base: string) {
+  if (!base) return true;
+  try {
+    const u = new URL(base);
+    return u.hostname === "localhost" || u.hostname === "127.0.0.1";
+  } catch {
+    return false;
+  }
+}
+
+/** Same URL rules as `apiFetch` (use for raw `fetch`, `<a href>`, etc.). */
+export function getApiFetchUrl(path: string) {
+  const suffix = `/api${path.startsWith("/") ? path : `/${path}`}`;
+  const base = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
+  // Same-origin `/api/*` is proxied to Express in dev (see `next.config.mjs` `rewrites`).
+  // Use relative URLs whenever the public API base is unset or loopback so SSR and the browser
+  // agree (avoids hydration mismatches like `/api/...` vs `http://127.0.0.1:4000/api/...`).
+  if (!base || isLoopbackApiBase(base)) return suffix;
+  return `${base}${suffix}`;
+}
 
 export function getAccessToken() {
   if (typeof window === "undefined") return null;
@@ -36,7 +58,14 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
   const token = typeof window !== "undefined" ? getAccessToken() : null;
   if (token) headers.set("Authorization", `Bearer ${token}`);
 
-  const res = await fetch(`${API}/api${path}`, { ...init, headers });
+  let res: Response;
+  try {
+    res = await fetch(getApiFetchUrl(path), { ...init, headers });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    const tried = typeof window !== "undefined" ? `${window.location.origin}${getApiFetchUrl(path)}` : getApiFetchUrl(path);
+    throw Object.assign(new Error("FETCH_FAILED"), { cause: e, apiBase: tried, detail: msg });
+  }
   if (!res.ok) {
     let err: unknown = null;
     try {
@@ -50,4 +79,3 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
   return res.json() as Promise<T>;
 }
 
-export { API };

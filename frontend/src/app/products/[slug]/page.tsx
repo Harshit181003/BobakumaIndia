@@ -1,5 +1,6 @@
-import Image from "next/image";
 import { notFound } from "next/navigation";
+import { ProductPhoto } from "@/components/media/ProductPhoto";
+import { getServerApiBase } from "@/lib/serverApiBase";
 import { ProductActions } from "./ProductActions";
 import {
   ProductMetaLine,
@@ -57,8 +58,8 @@ export default async function ProductPage({
   const sp = await searchParams;
   const currency = sp.currency ? parseDisplayCurrency(sp.currency) : await getCurrencyFromCookies();
   const curQs = currency !== "INR" ? `?currency=${encodeURIComponent(currency)}` : "";
-  const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000";
-  const res = await fetch(`${base}/api/products/${encodeURIComponent(slug)}${curQs}`, { next: { revalidate: 15 } });
+  const base = getServerApiBase();
+  const res = await fetch(`${base}/api/products/${encodeURIComponent(slug)}${curQs}`, { cache: "no-store" });
   if (!res.ok) notFound();
   const data = (await res.json()) as Detail;
   const p = data.product;
@@ -67,21 +68,23 @@ export default async function ProductPage({
     <div className="mx-auto max-w-6xl px-4 py-10">
       <div className="grid gap-8 lg:grid-cols-2">
         <div className="space-y-3">
-          <div className="relative aspect-square overflow-hidden rounded-[2rem] bg-white/60 shadow-soft">
-            {p.images[0] ? (
-              <Image src={p.images[0].url} alt={p.images[0].altText ?? p.name} fill className="object-cover" sizes="(max-width:1024px) 100vw, 50vw" />
-            ) : null}
+          <div className="relative aspect-square overflow-hidden rounded-[2rem] bg-white shadow-soft ring-1 ring-pink-100">
+            <ProductPhoto
+              src={p.images[0]?.url}
+              alt={p.images[0]?.altText ?? p.name}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
           </div>
           <div className="grid grid-cols-4 gap-2">
             {p.images.slice(1, 5).map((im) => (
-              <div key={im.id} className="relative aspect-square overflow-hidden rounded-2xl bg-cream-100">
-                <Image src={im.url} alt={im.altText ?? ""} fill className="object-cover" sizes="120px" />
+              <div key={im.id} className="relative aspect-square overflow-hidden rounded-2xl bg-white ring-1 ring-pink-100/80">
+                <ProductPhoto src={im.url} alt={im.altText ?? ""} className="absolute inset-0 h-full w-full object-cover" />
               </div>
             ))}
           </div>
         </div>
         <div>
-          <h1 className="text-3xl font-semibold text-ink-900">{p.name}</h1>
+          <h1 className="text-3xl font-semibold text-brand-navy">{p.name}</h1>
           <ProductMetaLine avgRating={p.avgRating} reviewCount={p.reviewCount} category={p.category} inStock={p.stockQty > 0} />
           <ProductPriceBlock
             displayPrice={p.displayPrice}
@@ -91,7 +94,7 @@ export default async function ProductPage({
             currency={currency}
             pricingNote={data.pricingNote}
           />
-          <p className="mt-6 text-sm leading-relaxed text-ink-900/75">{p.description}</p>
+          <p className="mt-6 text-sm leading-relaxed text-stone-700">{p.description}</p>
           <ProductSpecsDl material={p.material} color={p.color} capacityMl={p.capacityMl} />
           <div className="mt-8">
             <ProductActions productId={p.id} slug={p.slug} />

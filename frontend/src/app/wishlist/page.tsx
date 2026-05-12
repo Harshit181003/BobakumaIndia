@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
+import { ProductPhoto } from "@/components/media/ProductPhoto";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 
@@ -25,11 +25,19 @@ export default function WishlistPage() {
       <h1 className="text-2xl font-semibold text-ink-900">Wishlist</h1>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {data.items.map((i) => (
-          <Link key={i.wishlistItemId} href={`/products/${i.slug}`} className="overflow-hidden rounded-3xl border border-white/60 bg-white/70 shadow-sm">
-            <div className="relative aspect-[4/3] bg-cream-100">
-              {i.imageUrl ? <Image src={i.imageUrl} alt="" fill className="object-cover" sizes="300px" /> : null}
+          <Link
+            key={i.wishlistItemId}
+            href={`/products/${i.slug}`}
+            className="overflow-hidden rounded-3xl border border-stone-200/70 bg-white/85 shadow-sm dark:border-stone-600/40 dark:bg-stone-900/40"
+          >
+            <div className="relative aspect-[4/3] overflow-hidden bg-stone-100 dark:bg-stone-800/60">
+              <ProductPhoto
+                src={i.imageUrl}
+                alt={i.name}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
             </div>
-            <div className="p-3 text-sm font-semibold text-ink-900 line-clamp-2">{i.name}</div>
+            <div className="p-3 text-sm font-semibold text-brand-navy line-clamp-2 dark:text-stone-100">{i.name}</div>
             <div className="px-3 pb-3 text-sm font-bold">₹{(i.effectivePricePaise / 100).toFixed(0)}</div>
           </Link>
         ))}

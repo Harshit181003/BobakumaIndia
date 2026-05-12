@@ -66,8 +66,12 @@ export async function listProducts(f: ProductListFilters) {
   const params: unknown[] = [];
 
   if (f.category) {
-    where.push("p.category = ?");
-    params.push(f.category);
+    if (f.category === "LUNCHBOX") {
+      where.push("(p.category = 'KIDS' OR p.category = 'OFFICE')");
+    } else {
+      where.push("p.category = ?");
+      params.push(f.category);
+    }
   }
   if (f.material) {
     where.push("p.material = ?");

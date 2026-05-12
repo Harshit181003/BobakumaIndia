@@ -3,8 +3,12 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { API, apiFetch, getApiError, setTokens } from "@/lib/api";
+import { apiFetch, getApiError, getApiFetchUrl, setTokens } from "@/lib/api";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Input } from "@/components/ui/Input";
+import { motion } from "framer-motion";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,45 +20,61 @@ export default function LoginPage() {
   const [err, setErr] = useState<string | null>(null);
 
   return (
-    <div className="mx-auto flex max-w-md flex-col gap-4 px-4 py-16">
-      <h1 className="text-2xl font-semibold text-ink-900">{t("auth.welcomeBack", "Welcome back")}</h1>
-      <form
-        className="space-y-3 rounded-[2rem] border border-white/60 bg-white/70 p-6 shadow-soft backdrop-blur"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          setErr(null);
-          try {
-            const r = await apiFetch<{ tokens: { accessToken: string; refreshToken: string } }>("/auth/login", {
-              method: "POST",
-              body: JSON.stringify({ email: email.trim().toLowerCase(), password })
-            });
-            setTokens(r.tokens.accessToken, r.tokens.refreshToken);
-            router.push(next);
-          } catch (e) {
-            const { status, errorCode } = getApiError(e);
-            if (status === 403 || errorCode === "ACCOUNT_DISABLED") setErr(t("auth.accountDisabled"));
-            else if (status === 400) setErr(t("auth.invalidInput"));
-            else if (e instanceof TypeError) setErr(t("auth.networkError"));
-            else setErr(t("auth.loginFailed"));
-          }
-        }}
-      >
-        <input className="w-full rounded-2xl border border-white/70 bg-white px-3 py-2 text-sm" placeholder={t("auth.email", "Email")} value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
-        <input className="w-full rounded-2xl border border-white/70 bg-white px-3 py-2 text-sm" placeholder={t("auth.password", "Password")} value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
-        {err && <p className="text-xs font-semibold text-peach-500">{err}</p>}
-        <button type="submit" className="w-full rounded-2xl bg-ink-900 py-2.5 text-sm font-semibold text-cream-50">
-          {t("nav.login", "Login")}
-        </button>
-      </form>
-      <a
-        href={`${API}/api/auth/google`}
-        className="block rounded-2xl border border-white/70 bg-white/80 py-2.5 text-center text-sm font-semibold text-ink-900"
-      >
-        Continue with Google
-      </a>
-      <p className="text-center text-sm text-ink-900/60">
+    <div className="relative mx-auto max-w-md px-4 py-16">
+      <div className="pointer-events-none absolute left-1/2 top-8 h-48 w-48 -translate-x-1/2 rounded-full bg-brand-gold/15 blur-3xl" />
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
+        <p className="text-center text-[11px] font-semibold uppercase tracking-[0.22em] text-brand-sage">{t("nav.login")}</p>
+        <h1 className="mt-2 text-center font-display text-3xl font-medium text-brand-navy dark:text-stone-50">
+          {t("auth.welcomeBack", "Welcome back")}
+        </h1>
+        <p className="mt-2 text-center text-sm text-stone-600 dark:text-stone-400">Bobakuma — {t("footer.brandLine")}</p>
+      </motion.div>
+
+      <Card className="relative mt-10 space-y-4 p-7">
+        <form
+          className="space-y-4"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setErr(null);
+            try {
+              const r = await apiFetch<{ tokens: { accessToken: string; refreshToken: string } }>("/auth/login", {
+                method: "POST",
+                body: JSON.stringify({ email: email.trim().toLowerCase(), password })
+              });
+              setTokens(r.tokens.accessToken, r.tokens.refreshToken);
+              router.push(next);
+            } catch (e) {
+              const tried =
+                e && typeof e === "object" && "apiBase" in e ? String((e as { apiBase: unknown }).apiBase) : getApiFetchUrl("/auth/login");
+              const { status, errorCode } = getApiError(e);
+              if (status === 403 || errorCode === "ACCOUNT_DISABLED") setErr(t("auth.accountDisabled"));
+              else if (status === 400) setErr(t("auth.invalidInput"));
+              else if (e instanceof TypeError) setErr(`${t("auth.networkError")} (${tried})`);
+              else if (e && typeof e === "object" && "message" in e && (e as Error).message === "FETCH_FAILED")
+                setErr(`${t("auth.networkError")} (${tried})`);
+              else setErr(t("auth.loginFailed"));
+            }
+          }}
+        >
+          <Input placeholder={t("auth.email", "Email")} value={email} onChange={(e) => setEmail(e.target.value)} type="email" required autoComplete="email" />
+          <Input
+            placeholder={t("auth.password", "Password")}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            required
+            autoComplete="current-password"
+          />
+          {err && <p className="text-xs font-semibold text-peach-500">{err}</p>}
+          <Button type="submit" className="w-full" size="lg">
+            {t("nav.login", "Login")}
+          </Button>
+        </form>
+      </Card>
+
+      <p className="mt-8 text-center text-sm text-stone-600 dark:text-stone-400">
         {t("auth.newHere", "New here?")}{" "}
-        <Link href="/register" className="font-semibold text-lavender-500">
+        <Link href="/register" className="font-semibold text-brand-gold hover:underline dark:text-brand-gold-light">
           {t("auth.createAccount", "Create an account")}
         </Link>
       </p>

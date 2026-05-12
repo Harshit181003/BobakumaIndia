@@ -187,7 +187,9 @@ export const hiOverlay = {
 
 function navEsFrDeJa(
   home: string,
-  shop: string,
+  /** “Shop / all products” — must differ from lunchboxes label */
+  products: string,
+  lunchboxes: string,
   shirts: string,
   cart: string,
   wish: string,
@@ -195,12 +197,26 @@ function navEsFrDeJa(
   login: string,
   reg: string
 ) {
-  return { home, products: shop, shirts, lunchboxes: shop, cart, wishlist: wish, orders, account: "Account", admin: "Admin", login, register: reg, logout: "Logout", offers: "Offers" };
+  return {
+    home,
+    products,
+    shirts,
+    lunchboxes,
+    cart,
+    wishlist: wish,
+    orders,
+    account: "Account",
+    admin: "Admin",
+    login,
+    register: reg,
+    logout: "Logout",
+    offers: "Offers"
+  };
 }
 
 /** Marathi — full nav + product chrome */
 export const mrOverlay = {
-  nav: navEsFrDeJa("मुखपृष्ठ", "लंचबॉक्स", "टी-शर्ट", "कार्ट", "विशलिस्ट", "ऑर्डर", "लॉग इन", "नोंदणी"),
+  nav: navEsFrDeJa("मुखपृष्ठ", "शॉप", "लंचबॉक्स", "टी-शर्ट", "कार्ट", "विशलिस्ट", "ऑर्डर", "लॉग इन", "नोंदणी"),
   home: {
     featured: "वैशिष्ट्यीकृत लंचबॉक्स",
     featuredShirts: "वैशिष्ट्यीकृत टी-शर्ट",
@@ -254,7 +270,7 @@ export const mrOverlay = {
 } as const satisfies DeepPartial<Record<string, unknown>>;
 
 export const guOverlay = {
-  nav: navEsFrDeJa("હોમ", "લંચબોક્સ", "ટી-શર્ટ", "કાર્ટ", "વિશલિસ્ટ", "ઓર્ડર", "લૉગિન", "નોંધણી"),
+  nav: navEsFrDeJa("હોમ", "શોપ", "લંચબોક્સ", "ટી-શર્ટ", "કાર્ટ", "વિશલિસ્ટ", "ઓર્ડર", "લૉગિન", "નોંધણી"),
   home: {
     featured: "ફીચર્ડ લંચબોક્સ",
     featuredShirts: "ફીચર્ડ ટી-શર્ટ",
@@ -288,7 +304,7 @@ export const guOverlay = {
 } as const satisfies DeepPartial<Record<string, unknown>>;
 
 export const taOverlay = {
-  nav: navEsFrDeJa("முகப்பு", "லஞ்ச் பாக்ஸ்", "டி-சர்ட்", "கார்ட்", "விஷ்லிஸ்ட்", "ஆர்டர்கள்", "உள்நுழை", "பதிவு"),
+  nav: navEsFrDeJa("முகப்பு", "கடை", "லஞ்ச் பாக்ஸ்", "டி-சர்ட்", "கார்ட்", "விஷ்லிஸ்ட்", "ஆர்டர்கள்", "உள்நுழை", "பதிவு"),
   home: {
     featured: "சிறப்பு லஞ்ச் பாக்ஸ்",
     featuredShirts: "சிறப்பு டி-சர்ட்",
@@ -320,7 +336,7 @@ export const taOverlay = {
 } as const satisfies DeepPartial<Record<string, unknown>>;
 
 export const teOverlay = {
-  nav: navEsFrDeJa("హోమ్", "లంచ్ బాక్స్", "టీ-షర్ట్", "కార్ట్", "విష్‌లిస్ట్", "ఆర్డర్లు", "లాగిన్", "నమోదు"),
+  nav: navEsFrDeJa("హోమ్", "షాప్", "లంచ్ బాక్స్", "టీ-షర్ట్", "కార్ట్", "విష్‌లిస్ట్", "ఆర్డర్లు", "లాగిన్", "నమోదు"),
   home: {
     featured: "ఫీచర్డ్ లంచ్ బాక్స్",
     featuredShirts: "ఫీచర్డ్ టీ-షర్ట్",
@@ -352,7 +368,7 @@ export const teOverlay = {
 } as const satisfies DeepPartial<Record<string, unknown>>;
 
 export const bnOverlay = {
-  nav: navEsFrDeJa("হোম", "লাঞ্চবক্স", "টি-শার্ট", "কার্ট", "উইশলিস্ট", "অর্ডার", "লগইন", "নিবন্ধন"),
+  nav: navEsFrDeJa("হোম", "শপ", "লাঞ্চবক্স", "টি-শার্ট", "কার্ট", "উইশলিস্ট", "অর্ডার", "লগইন", "নিবন্ধন"),
   home: {
     featured: "ফিচার্ড লাঞ্চবক্স",
     featuredShirts: "ফিচার্ড টি-শার্ট",
@@ -384,7 +400,7 @@ export const bnOverlay = {
 } as const satisfies DeepPartial<Record<string, unknown>>;
 
 export const paOverlay = {
-  nav: navEsFrDeJa("ਹੋਮ", "ਲੰਚਬਾਕਸ", "ਟੀ-ਸ਼ਰਟ", "ਕਾਰਟ", "ਵਿਸ਼ਲਿਸਟ", "ਆਰਡਰ", "ਲਾਗਇਨ", "ਰਜਿਸਟਰ"),
+  nav: navEsFrDeJa("ਹੋਮ", "ਦੁਕਾਨ", "ਲੰਚਬਾਕਸ", "ਟੀ-ਸ਼ਰਟ", "ਕਾਰਟ", "ਵਿਸ਼ਲਿਸਟ", "ਆਰਡਰ", "ਲਾਗਇਨ", "ਰਜਿਸਟਰ"),
   home: {
     featured: "ਫੀਚਰਡ ਲੰਚਬਾਕਸ",
     featuredShirts: "ਫੀਚਰਡ ਟੀ-ਸ਼ਰਟ",
@@ -416,7 +432,7 @@ export const paOverlay = {
 } as const satisfies DeepPartial<Record<string, unknown>>;
 
 export const esOverlay = {
-  nav: navEsFrDeJa("Inicio", "Loncheras", "Camisetas", "Carrito", "Favoritos", "Pedidos", "Entrar", "Registro"),
+  nav: navEsFrDeJa("Inicio", "Tienda", "Loncheras", "Camisetas", "Carrito", "Favoritos", "Pedidos", "Entrar", "Registro"),
   home: {
     featured: "Loncheras destacadas",
     featuredShirts: "Camisetas destacadas",
@@ -489,7 +505,7 @@ export const esOverlay = {
 } as const satisfies DeepPartial<Record<string, unknown>>;
 
 export const frOverlay = {
-  nav: navEsFrDeJa("Accueil", "Boîtes à lunch", "T-shirts", "Panier", "Liste d'envies", "Commandes", "Connexion", "S'inscrire"),
+  nav: navEsFrDeJa("Accueil", "Boutique", "Boîtes à lunch", "T-shirts", "Panier", "Liste d'envies", "Commandes", "Connexion", "S'inscrire"),
   home: {
     featured: "Boîtes à lunch en vedette",
     featuredShirts: "T-shirts en vedette",
@@ -544,7 +560,7 @@ export const frOverlay = {
 } as const satisfies DeepPartial<Record<string, unknown>>;
 
 export const deOverlay = {
-  nav: navEsFrDeJa("Start", "Brotdosen", "T-Shirts", "Warenkorb", "Wunschliste", "Bestellungen", "Login", "Registrieren"),
+  nav: navEsFrDeJa("Start", "Shop", "Brotdosen", "T-Shirts", "Warenkorb", "Wunschliste", "Bestellungen", "Login", "Registrieren"),
   home: {
     featured: "Beliebte Brotdosen",
     featuredShirts: "Beliebte T-Shirts",
@@ -599,7 +615,7 @@ export const deOverlay = {
 } as const satisfies DeepPartial<Record<string, unknown>>;
 
 export const jaOverlay = {
-  nav: navEsFrDeJa("ホーム", "ランチボックス", "Tシャツ", "カート", "ほしい物", "注文", "ログイン", "登録"),
+  nav: navEsFrDeJa("ホーム", "ショップ", "ランチボックス", "Tシャツ", "カート", "ほしい物", "注文", "ログイン", "登録"),
   home: {
     featured: "おすすめランチボックス",
     featuredShirts: "おすすめTシャツ",

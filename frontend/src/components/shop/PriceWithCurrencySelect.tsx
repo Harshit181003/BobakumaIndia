@@ -15,7 +15,7 @@ const OPTIONS: { code: MarketCurrency; label: string }[] = [
 export function PriceWithCurrencySelect({
   displayFormatted,
   serverCurrency,
-  priceClassName = "text-sm font-bold text-ink-900"
+  priceClassName = "text-sm font-bold text-brand-navy"
 }: {
   displayFormatted: string;
   serverCurrency: MarketCurrency;
@@ -46,7 +46,7 @@ export function PriceWithCurrencySelect({
       <span className={priceClassName}>{displayFormatted}</span>
       <select
         aria-label="Display currency"
-        className="rounded-xl border border-white/70 bg-white/90 px-2 py-1 text-[11px] font-semibold text-ink-900 outline-none"
+        className="rounded-xl border border-pink-200/80 bg-white px-2 py-1 text-[11px] font-semibold text-brand-navy shadow-sm outline-none"
         value={value}
         onChange={(e) => onChange(e.target.value as MarketCurrency)}
       >

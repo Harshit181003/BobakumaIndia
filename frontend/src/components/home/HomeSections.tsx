@@ -2,13 +2,14 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { ProductPhoto } from "@/components/media/ProductPhoto";
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { apiFetch } from "@/lib/api";
 import { CurrencyLink } from "@/components/layout/CurrencyLink";
 import { PriceWithCurrencySelect } from "@/components/shop/PriceWithCurrencySelect";
+import { Skeleton } from "@/components/ui/Skeleton";
 import type { MarketCurrency } from "@/lib/currency";
 
 export type FeaturedItem = {
@@ -29,22 +30,22 @@ export function OffersBanner() {
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="relative overflow-hidden rounded-[2rem] bg-gradient-to-r from-mint-50 via-peach-50 to-blush-100 p-6 shadow-soft md:p-8"
+        className="relative overflow-hidden rounded-[2rem] border border-pink-200/60 bg-gradient-to-br from-[#fff5fb] via-[#f0f4ff] to-[#f3e8ff] p-6 shadow-[0_20px_50px_-24px_rgba(190,140,200,0.35)] md:p-8"
       >
         <div className="relative z-10 max-w-xl">
-          <div className="text-xs font-bold uppercase tracking-widest text-ink-900/55">{t("nav.offers")}</div>
-          <h2 className="mt-2 text-2xl font-semibold text-ink-900 md:text-3xl">{t("home.offerTitle")}</h2>
-          <p className="mt-2 text-sm text-ink-900/70 md:text-base">{t("home.offerBody")}</p>
+          <div className="text-xs font-bold uppercase tracking-widest text-stone-600">{t("nav.offers")}</div>
+          <h2 className="mt-2 text-2xl font-semibold text-brand-navy md:text-3xl">{t("home.offerTitle")}</h2>
+          <p className="mt-2 text-sm text-stone-700 md:text-base">{t("home.offerBody")}</p>
           <CurrencyLink
-            href="/products"
-            className="mt-4 inline-flex rounded-3xl bg-ink-900 px-5 py-2.5 text-sm font-semibold text-cream-50 shadow-soft"
+            href="/products?category=LUNCHBOX"
+            className="mt-4 inline-flex rounded-3xl bg-gradient-to-r from-[#7c6bcf] to-[#5b8bd9] px-5 py-2.5 text-sm font-semibold text-white shadow-md ring-1 ring-white/40"
           >
-            {t("nav.products")}
+            {t("nav.lunchboxes")}
           </CurrencyLink>
         </div>
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/50 blur-2xl"
+          className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 rounded-full bg-pink-200/40 blur-3xl"
           animate={{ scale: [1, 1.08, 1] }}
           transition={{ duration: 5, repeat: Infinity }}
         />
@@ -85,20 +86,16 @@ export function FeaturedCarousel({
             transition={{ delay: i * 0.05 }}
             className="min-w-[240px] max-w-[240px]"
           >
-            <div className="group overflow-hidden rounded-3xl border border-white/60 bg-white/70 shadow-soft backdrop-blur">
+            <div className="group overflow-hidden rounded-3xl border border-pink-200/50 bg-white shadow-[0_14px_44px_-22px_rgba(180,140,200,0.18)] transition hover:-translate-y-0.5 hover:border-[#c4b5fd]">
               <CurrencyLink href={`/products/${p.slug}${curQs}`} className="block">
-                <div className="relative aspect-square bg-cream-100">
-                  {p.imageUrl ? (
-                    <Image
-                      src={p.imageUrl}
-                      alt=""
-                      fill
-                      className="object-cover transition duration-500 group-hover:scale-105"
-                      sizes="240px"
-                    />
-                  ) : null}
+                <div className="relative aspect-square overflow-hidden bg-[#faf8ff]">
+                  <ProductPhoto
+                    src={p.imageUrl}
+                    alt={p.name}
+                    className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  />
                   {p.discountPercent > 0 && (
-                    <span className="absolute left-3 top-3 rounded-full bg-ink-900 px-2 py-1 text-[10px] font-bold text-cream-50">
+                    <span className="absolute left-3 top-3 rounded-full bg-gradient-to-r from-[#e85d8b] to-[#c084fc] px-2 py-1 text-[10px] font-bold text-white shadow-sm">
                       -{p.discountPercent}%
                     </span>
                   )}
@@ -121,6 +118,28 @@ export function FeaturedCarousel({
   );
 }
 
+export function FeaturedCarouselSkeleton({ titleKey = "home.featured" }: { titleKey?: string }) {
+  const { t } = useTranslation();
+  return (
+    <section className="mx-auto max-w-6xl px-4 py-12">
+      <div className="mb-6 flex items-end justify-between gap-4">
+        <Skeleton className="h-8 w-52" />
+        <Skeleton className="h-5 w-24" />
+      </div>
+      <div className="flex gap-4 overflow-hidden pb-2">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="min-w-[240px] max-w-[240px] shrink-0">
+            <Skeleton className="aspect-square w-full rounded-3xl" />
+            <Skeleton className="mt-3 h-4 w-[88%]" />
+            <Skeleton className="mt-2 h-4 w-1/3" />
+          </div>
+        ))}
+      </div>
+      <span className="sr-only">{t(titleKey)}</span>
+    </section>
+  );
+}
+
 export function CollectionsRow() {
   const { t, i18n } = useTranslation();
   const collections = useMemo(
@@ -130,49 +149,49 @@ export function CollectionsRow() {
           key: "original",
           title: t("home.colOriginal"),
           subtitle: t("home.colOriginalSub"),
-          href: "/products",
-          bg: "from-blush-50 via-white to-mint-50",
-          img: "https://images.unsplash.com/photo-1587734193613-12eaf7e0e4d1?auto=format&fit=crop&w=800&q=80"
+          href: "/products?category=LUNCHBOX",
+          bg: "from-stone-100 via-white to-brand-mist/80 dark:from-stone-900 dark:via-stone-900 dark:to-stone-800",
+          img: "/hero-2.jpeg"
         },
         {
           key: "positive",
           title: t("home.colPositive"),
           subtitle: t("home.colPositiveSub"),
           href: "/products?category=OFFICE",
-          bg: "from-mint-50 via-white to-lavender-50",
-          img: "https://images.unsplash.com/photo-1524594081293-190a2fe0baae?auto=format&fit=crop&w=800&q=80"
+          bg: "from-brand-mist/90 via-white to-stone-50 dark:from-stone-900 dark:via-stone-900 dark:to-stone-800",
+          img: "/hero-1.jpeg"
         },
         {
           key: "graphic",
           title: t("home.colGraphic"),
           subtitle: t("home.colGraphicSub"),
           href: "/products?category=KIDS",
-          bg: "from-peach-50 via-white to-blush-50",
-          img: "https://images.unsplash.com/photo-1594398907494-9f3f9d6949b8?auto=format&fit=crop&w=800&q=80"
+          bg: "from-stone-50 via-white to-brand-sand/90 dark:from-stone-900 dark:via-stone-900 dark:to-stone-800",
+          img: "/willfee-1.jpeg"
         },
         {
           key: "kids",
           title: t("home.colKids"),
           subtitle: t("home.colKidsSub"),
           href: "/products?category=KIDS",
-          bg: "from-lavender-50 via-white to-mint-50",
-          img: "https://images.unsplash.com/photo-1543363136-5ae0b0077b99?auto=format&fit=crop&w=800&q=80"
+          bg: "from-brand-sand/80 via-white to-brand-mist/80 dark:from-stone-900 dark:via-stone-900 dark:to-stone-800",
+          img: "/family.jpeg"
         },
         {
           key: "shirts",
           title: t("home.colShirts"),
           subtitle: t("home.colShirtsSub"),
           href: "/products?category=SHIRTS",
-          bg: "from-peach-50 via-white to-lavender-50",
-          img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80"
+          bg: "from-stone-100 via-white to-stone-200/60 dark:from-stone-900 dark:via-stone-800 dark:to-stone-900",
+          img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=400&q=80"
         },
         {
           key: "accessories",
           title: t("home.colAccessories"),
           subtitle: t("home.colAccessoriesSub"),
-          href: "/products",
-          bg: "from-cream-100 via-white to-peach-50",
-          img: "https://images.unsplash.com/photo-1526318896980-cf78c088247c?auto=format&fit=crop&w=800&q=80"
+          href: "/products?category=LUNCHBOX",
+          bg: "from-brand-mist via-white to-stone-50 dark:from-stone-900 dark:via-stone-900 dark:to-stone-800",
+          img: "/hero-1.jpeg"
         }
       ] as const,
     [t, i18n.language]
@@ -182,10 +201,10 @@ export function CollectionsRow() {
     <section className="mx-auto max-w-6xl px-4 py-10">
       <div className="flex items-end justify-between gap-4">
         <div>
-          <div className="text-xs font-bold uppercase tracking-widest text-ink-900/45">{t("home.rangeLabel")}</div>
-          <h2 className="mt-2 text-2xl font-semibold text-ink-900 md:text-3xl">{t("home.pickVibe")}</h2>
+          <div className="text-xs font-bold uppercase tracking-widest text-stone-500 dark:text-stone-400">{t("home.rangeLabel")}</div>
+          <h2 className="mt-2 text-2xl font-semibold text-brand-navy dark:text-stone-50 md:text-3xl">{t("home.pickVibe")}</h2>
         </div>
-        <CurrencyLink href="/products" className="text-sm font-semibold text-ink-900/60 hover:text-ink-900 hover:underline">
+        <CurrencyLink href="/products?category=LUNCHBOX" className="text-sm font-semibold text-stone-600 hover:text-brand-navy hover:underline dark:text-stone-400 dark:hover:text-amber-200">
           {t("home.viewAll")}
         </CurrencyLink>
       </div>
@@ -201,14 +220,14 @@ export function CollectionsRow() {
           >
             <CurrencyLink
               href={c.href}
-              className={`group relative block overflow-hidden rounded-3xl border border-white/70 bg-gradient-to-br ${c.bg} p-4 shadow-soft`}
+              className={`group relative block overflow-hidden rounded-3xl border border-stone-200/80 bg-gradient-to-br ${c.bg} p-4 shadow-soft dark:border-stone-600/60`}
             >
-              <div className="text-sm font-semibold text-ink-900">{c.title}</div>
-              <div className="mt-0.5 text-xs text-ink-900/55">{c.subtitle}</div>
-              <div className="pointer-events-none absolute bottom-2 right-2 h-16 w-16 overflow-hidden rounded-2xl bg-white/70 shadow-sm">
+              <div className="text-sm font-semibold text-brand-navy dark:text-stone-100">{c.title}</div>
+              <div className="mt-0.5 text-xs text-stone-600 dark:text-stone-400">{c.subtitle}</div>
+              <div className="pointer-events-none absolute bottom-2 right-2 h-16 w-16 overflow-hidden rounded-2xl border border-stone-200/60 bg-stone-100 shadow-sm dark:border-stone-600 dark:bg-stone-800">
                 <img src={c.img} alt="" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
               </div>
-              <span className="absolute bottom-3 left-4 inline-flex items-center rounded-full bg-white/70 px-2 py-1 text-[10px] font-bold text-ink-900/70 backdrop-blur">
+              <span className="absolute bottom-3 left-4 inline-flex items-center rounded-full border border-stone-200/60 bg-white/90 px-2 py-1 text-[10px] font-bold text-brand-navy backdrop-blur dark:border-stone-600 dark:bg-stone-900/90 dark:text-stone-200">
                 {t("home.explore")}
               </span>
             </CurrencyLink>
@@ -221,7 +240,7 @@ export function CollectionsRow() {
 
 function SizeIcon() {
   return (
-    <svg viewBox="0 0 48 48" className="h-7 w-7 text-ink-900/70" fill="none" aria-hidden>
+    <svg viewBox="0 0 48 48" className="h-7 w-7 text-[#7c6bcf]" fill="none" aria-hidden>
       <path
         d="M12 17c0-2.2 1.8-4 4-4h16c2.2 0 4 1.8 4 4v18c0 2.2-1.8 4-4 4H16c-2.2 0-4-1.8-4-4V17Z"
         stroke="currentColor"
@@ -250,25 +269,28 @@ export function SizesRow() {
 
   return (
     <section className="mx-auto max-w-6xl px-4 pb-8">
-      <div className="rounded-[2rem] border border-white/70 bg-white/70 p-5 shadow-soft backdrop-blur md:p-6">
+      <div className="rounded-[2rem] border border-sky-200/50 bg-gradient-to-br from-white via-[#f5f8ff] to-[#f3f0ff] p-5 shadow-[0_20px_50px_-24px_rgba(140,170,230,0.2)] md:p-6">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <div className="text-xs font-bold uppercase tracking-widest text-ink-900/45">{t("home.everySize")}</div>
-            <h3 className="mt-1 text-xl font-semibold text-ink-900">{t("home.forEveryNeed")}</h3>
+            <div className="text-xs font-bold uppercase tracking-widest text-stone-500">{t("home.everySize")}</div>
+            <h3 className="mt-1 text-xl font-semibold text-brand-navy">{t("home.forEveryNeed")}</h3>
           </div>
-          <CurrencyLink href="/products" className="text-sm font-semibold text-ink-900/55 hover:text-ink-900 hover:underline">
+          <CurrencyLink href="/products?category=LUNCHBOX" className="text-sm font-semibold text-[#5b8bd9] hover:underline">
             {t("home.seeSizes")}
           </CurrencyLink>
         </div>
         <div className="mt-5 grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {sizes.map((s) => (
-            <div key={s.key} className="rounded-3xl border border-white/70 bg-white/80 p-4 text-center">
-              <div className="mx-auto grid h-10 w-10 place-items-center rounded-2xl bg-mint-50">
+            <div
+              key={s.key}
+              className="rounded-3xl border border-pink-200/50 bg-white p-4 text-center shadow-sm"
+            >
+              <div className="mx-auto grid h-10 w-10 place-items-center rounded-2xl border border-lavender-200/80 bg-lavender-50">
                 <SizeIcon />
               </div>
-              <div className="mt-2 text-sm font-extrabold text-ink-900">{s.key}</div>
-              <div className="text-xs font-semibold text-ink-900/60">{s.cap}</div>
-              <div className="mt-1 text-[11px] text-ink-900/50">{s.note}</div>
+              <div className="mt-2 text-sm font-extrabold text-brand-navy">{s.key}</div>
+              <div className="text-xs font-semibold text-stone-600">{s.cap}</div>
+              <div className="mt-1 text-[11px] text-stone-500">{s.note}</div>
             </div>
           ))}
         </div>
@@ -283,52 +305,52 @@ export function PromoTiles() {
     <section className="mx-auto max-w-6xl px-4 pb-10">
       <div className="grid gap-4 md:grid-cols-3">
         <CurrencyLink
-          href="/products"
-          className="group relative overflow-hidden rounded-[2rem] border border-white/70 bg-gradient-to-br from-peach-50 via-white to-mint-50 p-6 shadow-soft"
+          href="/products?category=LUNCHBOX"
+          className="group relative overflow-hidden rounded-[2rem] border border-stone-200/80 bg-gradient-to-br from-brand-mist/90 via-white to-brand-sand/70 p-6 shadow-soft dark:border-stone-600 dark:from-stone-900 dark:via-stone-900 dark:to-stone-800"
         >
-          <div className="text-xs font-bold uppercase tracking-widest text-ink-900/45">{t("home.mixMatch")}</div>
-          <div className="mt-2 text-xl font-semibold text-ink-900">{t("home.buildSet")}</div>
-          <p className="mt-2 text-sm text-ink-900/65">{t("home.buildSetBody")}</p>
-          <span className="mt-4 inline-flex rounded-2xl bg-ink-900 px-4 py-2 text-xs font-semibold text-cream-50">
+          <div className="text-xs font-bold uppercase tracking-widest text-stone-500 dark:text-stone-400">{t("home.mixMatch")}</div>
+          <div className="mt-2 text-xl font-semibold text-brand-navy dark:text-stone-100">{t("home.buildSet")}</div>
+          <p className="mt-2 text-sm text-stone-600 dark:text-stone-300">{t("home.buildSetBody")}</p>
+          <span className="mt-4 inline-flex rounded-2xl bg-brand-navy px-4 py-2 text-xs font-semibold text-white dark:bg-amber-600 dark:text-stone-950">
             {t("home.tryNow")}
           </span>
           <img
             alt=""
-            src="https://images.unsplash.com/photo-1615485920415-680443d9688c?auto=format&fit=crop&w=800&q=80"
+            src="/willfee-1.jpeg"
             className="pointer-events-none absolute -bottom-6 -right-6 h-40 w-40 rotate-6 rounded-3xl object-cover shadow-soft transition duration-500 group-hover:scale-105"
           />
         </CurrencyLink>
 
         <CurrencyLink
           href="/products?category=OFFICE"
-          className="group relative overflow-hidden rounded-[2rem] border border-white/70 bg-gradient-to-br from-lavender-50 via-white to-blush-50 p-6 shadow-soft"
+          className="group relative overflow-hidden rounded-[2rem] border border-stone-200/80 bg-gradient-to-br from-stone-50 via-white to-brand-mist/80 p-6 shadow-soft dark:border-stone-600 dark:from-stone-900 dark:via-stone-900 dark:to-stone-800"
         >
-          <div className="text-xs font-bold uppercase tracking-widest text-ink-900/45">{t("home.corpGift")}</div>
-          <div className="mt-2 text-xl font-semibold text-ink-900">{t("home.giftBoxes")}</div>
-          <p className="mt-2 text-sm text-ink-900/65">{t("home.giftBoxesBody")}</p>
-          <span className="mt-4 inline-flex rounded-2xl bg-white/80 px-4 py-2 text-xs font-semibold text-ink-900 shadow-sm">
+          <div className="text-xs font-bold uppercase tracking-widest text-stone-500 dark:text-stone-400">{t("home.corpGift")}</div>
+          <div className="mt-2 text-xl font-semibold text-brand-navy dark:text-stone-100">{t("home.giftBoxes")}</div>
+          <p className="mt-2 text-sm text-stone-600 dark:text-stone-300">{t("home.giftBoxesBody")}</p>
+          <span className="mt-4 inline-flex rounded-2xl border border-stone-200/80 bg-white px-4 py-2 text-xs font-semibold text-brand-navy shadow-sm dark:border-stone-600 dark:bg-stone-800 dark:text-stone-100">
             {t("home.exploreBtn")}
           </span>
           <img
             alt=""
-            src="https://images.unsplash.com/photo-1524594081293-190a2fe0baae?auto=format&fit=crop&w=800&q=80"
+            src="/hero-1.jpeg"
             className="pointer-events-none absolute -bottom-6 -right-6 h-40 w-40 -rotate-6 rounded-3xl object-cover shadow-soft transition duration-500 group-hover:scale-105"
           />
         </CurrencyLink>
 
         <CurrencyLink
           href="/products?category=KIDS"
-          className="group relative overflow-hidden rounded-[2rem] border border-white/70 bg-gradient-to-br from-mint-50 via-white to-cream-100 p-6 shadow-soft"
+          className="group relative overflow-hidden rounded-[2rem] border border-stone-200/80 bg-gradient-to-br from-brand-sand/80 via-white to-brand-mist/70 p-6 shadow-soft dark:border-stone-600 dark:from-stone-900 dark:via-stone-900 dark:to-stone-800"
         >
-          <div className="text-xs font-bold uppercase tracking-widest text-ink-900/45">{t("home.communityTag")}</div>
-          <div className="mt-2 text-xl font-semibold text-ink-900">{t("home.communityTitle")}</div>
-          <p className="mt-2 text-sm text-ink-900/65">{t("home.communityBody")}</p>
-          <span className="mt-4 inline-flex rounded-2xl bg-mint-100 px-4 py-2 text-xs font-semibold text-ink-900">
+          <div className="text-xs font-bold uppercase tracking-widest text-stone-500 dark:text-stone-400">{t("home.communityTag")}</div>
+          <div className="mt-2 text-xl font-semibold text-brand-navy dark:text-stone-100">{t("home.communityTitle")}</div>
+          <p className="mt-2 text-sm text-stone-600 dark:text-stone-300">{t("home.communityBody")}</p>
+          <span className="mt-4 inline-flex rounded-2xl border border-teal-200/60 bg-teal-50/80 px-4 py-2 text-xs font-semibold text-brand-navy dark:border-teal-800 dark:bg-teal-950/50 dark:text-teal-100">
             {t("home.viewPosts")}
           </span>
           <img
             alt=""
-            src="https://images.unsplash.com/photo-1543363136-5ae0b0077b99?auto=format&fit=crop&w=800&q=80"
+            src="/hero-2.jpeg"
             className="pointer-events-none absolute -bottom-6 -right-6 h-40 w-40 rotate-3 rounded-3xl object-cover shadow-soft transition duration-500 group-hover:scale-105"
           />
         </CurrencyLink>
@@ -339,7 +361,7 @@ export function PromoTiles() {
 
 function CheckIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden>
+    <svg viewBox="0 0 24 24" className="h-5 w-5 text-brand-navy dark:text-amber-200" fill="none" aria-hidden>
       <path d="M20 7 10.5 16.5 4 10" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -354,17 +376,17 @@ export function UspsRow() {
           {
             title: t("home.uspLeakTitle"),
             body: t("home.uspLeakBody"),
-            bg: "from-mint-50 via-white to-cream-50"
+            bg: "from-brand-mist/90 via-white to-brand-sand/70 dark:from-stone-900 dark:via-stone-800 dark:to-stone-900"
           },
           {
             title: t("home.uspEcoTitle"),
             body: t("home.uspEcoBody"),
-            bg: "from-cream-50 via-white to-lavender-50"
+            bg: "from-stone-50 via-white to-brand-mist/80 dark:from-stone-900 dark:via-stone-800 dark:to-stone-900"
           },
           {
             title: t("home.uspPremiumTitle"),
             body: t("home.uspPremiumBody"),
-            bg: "from-blush-50 via-white to-peach-50"
+            bg: "from-stone-100 via-white to-stone-50 dark:from-stone-900 dark:via-stone-800 dark:to-stone-900"
           }
         ].map((x, i) => (
           <motion.div
@@ -373,15 +395,15 @@ export function UspsRow() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.06 }}
-            className={`rounded-[2rem] border border-white/70 bg-gradient-to-br ${x.bg} p-6 shadow-soft`}
+            className={`rounded-[2rem] border border-stone-200/80 bg-gradient-to-br ${x.bg} p-6 shadow-soft dark:border-stone-600`}
           >
             <div className="flex items-start gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-2xl bg-white/70 text-ink-900/70 shadow-soft">
+              <div className="grid h-10 w-10 place-items-center rounded-2xl border border-stone-200/80 bg-white shadow-sm dark:border-stone-600 dark:bg-stone-800">
                 <CheckIcon />
               </div>
               <div>
-                <div className="text-lg font-semibold tracking-tight text-ink-900">{x.title}</div>
-                <p className="mt-1 text-sm leading-relaxed text-ink-900/70">{x.body}</p>
+                <div className="text-lg font-semibold tracking-tight text-brand-navy dark:text-stone-100">{x.title}</div>
+                <p className="mt-1 text-sm leading-relaxed text-stone-600 dark:text-stone-300">{x.body}</p>
               </div>
             </div>
           </motion.div>
@@ -391,20 +413,46 @@ export function UspsRow() {
   );
 }
 
+export function ShirtsPromoRow() {
+  const { t } = useTranslation();
+  return (
+    <section className="mx-auto max-w-6xl px-4 py-8">
+      <div className="grid items-center gap-8 overflow-hidden rounded-[2rem] border border-pink-200/50 bg-gradient-to-br from-[#fff8fc] via-[#f5f0ff] to-[#eef6ff] p-6 shadow-soft md:grid-cols-2 md:p-10">
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-stone-500">{t("home.shirtsStripEyebrow")}</p>
+          <h2 className="mt-2 font-display text-2xl font-medium text-brand-navy md:text-3xl">{t("home.shirtsStripTitle")}</h2>
+          <p className="mt-3 text-sm leading-relaxed text-stone-700">{t("home.shirtsStripBody")}</p>
+          <CurrencyLink
+            href="/products?category=SHIRTS"
+            className="mt-6 inline-flex rounded-2xl bg-gradient-to-r from-[#e85d8b] to-[#c084fc] px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:opacity-95"
+          >
+            {t("home.shopShirts")}
+          </CurrencyLink>
+        </div>
+        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-pink-200/50 bg-white shadow-md">
+          <img
+            src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=80"
+            alt=""
+            className="h-full w-full object-cover"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function ChoosingGuide() {
   const { t } = useTranslation();
   return (
     <section className="mx-auto max-w-6xl px-4 py-10">
-      <div className="rounded-[2rem] border border-white/70 bg-white/70 p-6 shadow-soft backdrop-blur md:p-10">
+      <div className="rounded-[2rem] border border-pink-200/50 bg-gradient-to-br from-white via-[#fff8fc] to-[#f0f4ff] p-6 shadow-[0_20px_50px_-24px_rgba(190,150,210,0.25)] md:p-10">
         <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
           <div>
-            <div className="text-xs font-bold uppercase tracking-widest text-ink-900/45">{t("home.guideLabel")}</div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ink-900 md:text-3xl">{t("home.guideTitle")}</h2>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-900/70">
-              {t("home.guideBody")}
-            </p>
+            <div className="text-xs font-bold uppercase tracking-widest text-stone-500">{t("home.guideLabel")}</div>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-brand-navy md:text-3xl">{t("home.guideTitle")}</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-stone-700">{t("home.guideBody")}</p>
           </div>
-          <CurrencyLink href="/products" className="text-sm font-semibold text-lavender-500 hover:underline">
+          <CurrencyLink href="/products?category=LUNCHBOX" className="text-sm font-semibold text-[#7c6bcf] hover:underline">
             {t("home.guideShopAll")}
           </CurrencyLink>
         </div>
@@ -413,16 +461,16 @@ export function ChoosingGuide() {
           {[
             { title: t("home.guideKidsTitle"), body: t("home.guideKidsBody"), href: "/products?category=KIDS" },
             { title: t("home.guideOfficeTitle"), body: t("home.guideOfficeBody"), href: "/products?category=OFFICE" },
-            { title: t("home.guideAccessoriesTitle"), body: t("home.guideAccessoriesBody"), href: "/products" }
+            { title: t("home.guideAccessoriesTitle"), body: t("home.guideAccessoriesBody"), href: "/products?category=LUNCHBOX" }
           ].map((x) => (
             <CurrencyLink
               key={x.title}
               href={x.href}
-              className="group rounded-[2rem] border border-white/70 bg-white/80 p-6 shadow-soft transition hover:translate-y-[-1px]"
+              className="group rounded-[2rem] border border-pink-200/60 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-[#c4b5fd] hover:shadow-md"
             >
-              <div className="text-lg font-semibold text-ink-900">{x.title}</div>
-              <div className="mt-2 text-sm text-ink-900/65">{x.body}</div>
-              <div className="mt-4 text-xs font-bold uppercase tracking-widest text-ink-900/45 group-hover:text-ink-900/60">
+              <div className="text-lg font-semibold text-brand-navy">{x.title}</div>
+              <div className="mt-2 text-sm text-stone-600">{x.body}</div>
+              <div className="mt-4 text-xs font-bold uppercase tracking-widest text-[#7c6bcf] opacity-80 group-hover:opacity-100">
                 {t("home.explore")}
               </div>
             </CurrencyLink>
@@ -537,49 +585,45 @@ export function RecipesRow() {
     <section className="mx-auto max-w-6xl px-4 py-12">
       <div className="mb-6 flex items-end justify-between gap-4">
         <div>
-          <div className="text-xs font-bold uppercase tracking-widest text-ink-900/45">{t("home.recipesLabel")}</div>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ink-900 md:text-3xl">{t("home.recipesTitle")}</h2>
+          <div className="text-xs font-bold uppercase tracking-widest text-stone-500">{t("home.recipesLabel")}</div>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-brand-navy md:text-3xl">{t("home.recipesTitle")}</h2>
         </div>
-        <span className="text-sm font-semibold text-ink-900/55">{t("home.recipesFreeBook")}</span>
+        <span className="text-sm font-semibold text-stone-600">{t("home.recipesFreeBook")}</span>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-[2rem] border border-white/70 bg-gradient-to-br from-mint-50 via-white to-cream-50 p-7 shadow-soft">
-          <div className="text-lg font-semibold text-ink-900">{t("home.recipesBlockTitle")}</div>
-          <p className="mt-2 text-sm leading-relaxed text-ink-900/70">
-            {t("home.recipesBlockBody")}
-          </p>
+        <div className="rounded-[2rem] border border-pink-200/50 bg-gradient-to-br from-mint-50 via-white to-[#fff5fb] p-7 shadow-soft">
+          <div className="text-lg font-semibold text-brand-navy">{t("home.recipesBlockTitle")}</div>
+          <p className="mt-2 text-sm leading-relaxed text-stone-700">{t("home.recipesBlockBody")}</p>
           <div className="mt-5 grid gap-3">
             {easyRecipes.slice(0, 2).map((r) => (
-              <div key={r.title} className="rounded-3xl border border-white/70 bg-white/80 p-4">
+              <div key={r.title} className="rounded-3xl border border-stone-200/80 bg-white p-4 shadow-sm">
                 <div className="flex items-center justify-between gap-3">
-                  <div className="text-sm font-semibold text-ink-900">{r.title}</div>
-                  <div className="text-xs font-bold text-ink-900/45">{r.time}</div>
+                  <div className="text-sm font-semibold text-brand-navy">{r.title}</div>
+                  <div className="text-xs font-bold text-stone-500">{r.time}</div>
                 </div>
-                <div className="mt-1 text-xs text-ink-900/60">{r.note}</div>
+                <div className="mt-1 text-xs text-stone-600">{r.note}</div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="rounded-[2rem] border border-white/70 bg-white/70 p-7 shadow-soft backdrop-blur">
-          <div className="text-lg font-semibold text-ink-900">{t("home.recipesWeekTitle")}</div>
+        <div className="rounded-[2rem] border border-sky-200/50 bg-white p-7 shadow-soft">
+          <div className="text-lg font-semibold text-brand-navy">{t("home.recipesWeekTitle")}</div>
           <div className="mt-4 grid gap-3">
             {easyRecipes.slice(2).map((r) => (
-              <div key={r.title} className="rounded-3xl border border-white/70 bg-white/80 p-4">
+              <div key={r.title} className="rounded-3xl border border-stone-200/80 bg-[#fafbff] p-4 shadow-sm">
                 <div className="flex items-center justify-between gap-3">
-                  <div className="text-sm font-semibold text-ink-900">{r.title}</div>
-                  <div className="text-xs font-bold text-ink-900/45">{r.time}</div>
+                  <div className="text-sm font-semibold text-brand-navy">{r.title}</div>
+                  <div className="text-xs font-bold text-stone-500">{r.time}</div>
                 </div>
-                <div className="mt-1 text-xs text-ink-900/60">{r.note}</div>
+                <div className="mt-1 text-xs text-stone-600">{r.note}</div>
               </div>
             ))}
           </div>
-          <div className="mt-5 rounded-3xl border border-white/70 bg-gradient-to-br from-lavender-50 via-white to-blush-50 p-5">
-            <div className="text-sm font-semibold text-ink-900">{t("home.recipesWantCodeTitle")}</div>
-            <p className="mt-1 text-xs text-ink-900/65">
-              {t("home.recipesWantCodeBody")}
-            </p>
+          <div className="mt-5 rounded-3xl border border-lavender-200/70 bg-gradient-to-br from-lavender-50 via-white to-blush-50 p-5 shadow-sm">
+            <div className="text-sm font-semibold text-brand-navy">{t("home.recipesWantCodeTitle")}</div>
+            <p className="mt-1 text-xs leading-relaxed text-stone-700">{t("home.recipesWantCodeBody")}</p>
           </div>
         </div>
       </div>
@@ -587,15 +631,7 @@ export function RecipesRow() {
   );
 }
 
-const gallerySrc = [
-  "/ref.jpeg",
-  "/hero-1.jpeg",
-  "/hero-2.jpeg",
-  "/family.jpeg",
-  "https://images.unsplash.com/photo-1594398907494-9f3f9d6949b8?auto=format&fit=crop&w=600&q=80",
-  "https://images.unsplash.com/photo-1526318896980-cf78c088247c?auto=format&fit=crop&w=600&q=80",
-  "https://images.unsplash.com/photo-1543363136-5ae0b0077b99?auto=format&fit=crop&w=600&q=80"
-];
+const gallerySrc = ["/hero-1.jpeg", "/hero-2.jpeg", "/family.jpeg", "/willfee-1.jpeg", "/hero-1.jpeg"];
 
 export function InstagramGallery() {
   const { t } = useTranslation();

@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/cn";
 import { apiFetch, clearTokens, getAccessToken } from "@/lib/api";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { CurrencyLink } from "./CurrencyLink";
+import { BobakumaLogo } from "@/components/brand/BobakumaLogo";
 
 type Me = { user: { id: number; email: string | null; role: string; name: string | null } };
 
@@ -17,7 +17,6 @@ export function Navbar() {
   const pathname = usePathname();
   const sp = useSearchParams();
   const { t } = useTranslation();
-  const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const [me, setMe] = useState<Me["user"] | null | undefined>(undefined);
 
@@ -35,6 +34,7 @@ export function Navbar() {
   const links = [
     { href: "/", label: t("nav.home") },
     { href: "/products", label: t("nav.products") },
+    { href: "/products?category=LUNCHBOX", label: t("nav.lunchboxes") },
     { href: "/products?category=SHIRTS", label: t("nav.shirts") },
     { href: "/cart", label: t("nav.cart") },
     { href: "/wishlist", label: t("nav.wishlist") },
@@ -52,27 +52,22 @@ export function Navbar() {
   const isAdmin = me?.role === "ADMIN" || me?.role === "SUPER_ADMIN";
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/40 bg-cream-50/75 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-        <Link href="/" className="flex items-center gap-2">
-          <motion.span
-            className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-blush-100 to-lavender-100 text-sm font-black text-ink-900 shadow-soft"
-            animate={{ y: [0, -2, 0] }}
-            transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            B
-          </motion.span>
-          <span className="text-sm font-semibold tracking-tight text-ink-900">Bobakuma</span>
+    <header className="sticky top-0 z-50 border-b border-pink-200/50 bg-gradient-to-r from-[#fff5fb] via-[#f0f4ff] to-[#f5f0ff] shadow-[0_8px_32px_-16px_rgba(200,160,220,0.2)] backdrop-blur-xl">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3.5">
+        <Link href="/" className="group flex items-center" aria-label="Bobakuma — home">
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 24 }}>
+            <BobakumaLogo />
+          </motion.div>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-0.5 md:flex">
           {links.map((l) => (
             <CurrencyLink
               key={l.href}
               href={l.href}
               className={cn(
-                "rounded-2xl px-3 py-2 text-sm font-medium text-ink-900/70 hover:bg-white/60 hover:text-ink-900",
-                navItemActive(l.href) && "bg-white/70 text-ink-900 shadow-sm"
+                "rounded-xl px-3.5 py-2 text-sm font-medium text-stone-600 transition hover:bg-pink-100/50 hover:text-brand-navy",
+                navItemActive(l.href) && "bg-pink-100/70 text-brand-navy shadow-sm ring-1 ring-pink-200/60"
               )}
             >
               {l.label}
@@ -82,8 +77,8 @@ export function Navbar() {
             <CurrencyLink
               href="/admin"
               className={cn(
-                "rounded-2xl px-3 py-2 text-sm font-semibold text-lavender-500 hover:bg-white/60",
-                pathname.startsWith("/admin") && "bg-white/70 shadow-sm"
+                "ml-1 rounded-xl px-3.5 py-2 text-sm font-semibold text-brand-gold transition hover:bg-brand-gold/10",
+                pathname.startsWith("/admin") && "bg-brand-gold/15 text-brand-navy"
               )}
             >
               {t("nav.admin")}
@@ -93,24 +88,17 @@ export function Navbar() {
 
         <div className="hidden items-center gap-2 md:flex">
           <LanguageSwitcher />
-          <button
-            type="button"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="rounded-2xl border border-white/60 bg-white/70 px-3 py-2 text-xs font-semibold text-ink-900 shadow-sm backdrop-blur"
-          >
-            {theme === "dark" ? "Light" : "Dark"}
-          </button>
           {me === undefined ? null : me ? (
             <div className="flex items-center gap-2">
               <Link
                 href="/account"
-                className="max-w-[140px] truncate rounded-2xl bg-ink-900 px-3 py-2 text-xs font-semibold text-cream-50 shadow-soft"
+                className="max-w-[150px] truncate rounded-xl bg-gradient-to-r from-brand-navy to-brand-navy-deep px-4 py-2 text-xs font-semibold text-white shadow-md transition hover:opacity-95"
               >
                 {me.name ?? me.email ?? t("nav.account")}
               </Link>
               <button
                 type="button"
-                className="rounded-2xl bg-white/70 px-3 py-2 text-xs font-semibold text-ink-900 shadow-sm"
+                className="rounded-xl border border-stone-200/80 bg-white px-3 py-2 text-xs font-semibold text-brand-navy transition hover:bg-pink-50"
                 onClick={() => {
                   clearTokens();
                   setMe(null);
@@ -124,13 +112,13 @@ export function Navbar() {
             <div className="flex gap-2">
               <Link
                 href="/login"
-                className="rounded-2xl bg-white/70 px-3 py-2 text-xs font-semibold text-ink-900 shadow-sm"
+                className="rounded-xl border border-stone-200/80 bg-white px-4 py-2 text-xs font-semibold text-brand-navy transition hover:border-pink-300 hover:bg-pink-50/50"
               >
                 {t("nav.login")}
               </Link>
               <Link
                 href="/register"
-                className="rounded-2xl bg-ink-900 px-3 py-2 text-xs font-semibold text-cream-50 shadow-soft"
+                className="rounded-xl bg-gradient-to-r from-[#db2777] to-[#9333ea] px-4 py-2 text-xs font-semibold text-white shadow-md ring-2 ring-white transition hover:brightness-105"
               >
                 {t("nav.register")}
               </Link>
@@ -140,34 +128,56 @@ export function Navbar() {
 
         <button
           type="button"
-          className="inline-flex rounded-2xl border border-white/60 bg-white/70 p-2 md:hidden"
+          className="inline-flex rounded-xl border border-stone-200/80 bg-white p-2.5 md:hidden"
           aria-label="Menu"
+          aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
-          <span className="text-lg">☰</span>
+          <span className="text-lg leading-none text-brand-navy">{open ? "✕" : "☰"}</span>
         </button>
       </div>
 
-      {open && (
-        <div className="border-t border-white/40 bg-cream-50/95 px-4 py-3 md:hidden">
-          <div className="flex flex-col gap-2">
-            {links.map((l) => (
-              <CurrencyLink key={l.href} href={l.href} onClick={() => setOpen(false)} className="rounded-2xl px-3 py-2 text-sm">
-                {l.label}
-              </CurrencyLink>
-            ))}
-            {isAdmin && (
-              <CurrencyLink href="/admin" onClick={() => setOpen(false)} className="rounded-2xl px-3 py-2 text-sm font-semibold">
-                {t("nav.admin")}
-              </CurrencyLink>
-            )}
-            <LanguageSwitcher />
-            <Link href="/login" onClick={() => setOpen(false)} className="rounded-2xl px-3 py-2 text-sm">
-              {t("nav.login")}
-            </Link>
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22 }}
+            className="overflow-hidden border-t border-pink-200/40 bg-[#fffafd] backdrop-blur-lg md:hidden"
+          >
+            <div className="flex flex-col gap-1 px-4 py-4">
+              {links.map((l) => (
+                <CurrencyLink
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setOpen(false)}
+                  className="rounded-xl px-3 py-2.5 text-sm font-medium text-brand-navy"
+                >
+                  {l.label}
+                </CurrencyLink>
+              ))}
+              {isAdmin && (
+                <CurrencyLink href="/admin" onClick={() => setOpen(false)} className="rounded-xl px-3 py-2.5 text-sm font-semibold text-brand-gold">
+                  {t("nav.admin")}
+                </CurrencyLink>
+              )}
+              <div className="my-2 border-t border-pink-200/50" />
+              <LanguageSwitcher />
+              <Link href="/login" onClick={() => setOpen(false)} className="rounded-xl px-3 py-2.5 text-sm">
+                {t("nav.login")}
+              </Link>
+              <Link
+                href="/register"
+                onClick={() => setOpen(false)}
+                className="mx-1 rounded-xl bg-gradient-to-r from-[#db2777] to-[#9333ea] px-3 py-2.5 text-center text-sm font-semibold text-white shadow-md ring-2 ring-white"
+              >
+                {t("nav.register")}
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

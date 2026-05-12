@@ -38,7 +38,7 @@ export function ProductActions({ productId, slug }: { productId: number; slug: s
         type="button"
         disabled={busy !== null}
         onClick={() => void addCart()}
-        className="rounded-3xl bg-ink-900 px-6 py-3 text-sm font-semibold text-cream-50 shadow-soft disabled:opacity-60"
+        className="rounded-3xl bg-gradient-to-r from-[#7c6bcf] to-[#5b8bd9] px-6 py-3 text-sm font-semibold text-white shadow-md ring-1 ring-white/50 disabled:opacity-60"
       >
         {busy === "cart" ? "Adding…" : "Add to cart"}
       </button>
@@ -46,7 +46,7 @@ export function ProductActions({ productId, slug }: { productId: number; slug: s
         type="button"
         disabled={busy !== null}
         onClick={() => void addWish()}
-        className="rounded-3xl border border-white/70 bg-white/70 px-6 py-3 text-sm font-semibold text-ink-900 shadow-sm backdrop-blur disabled:opacity-60"
+        className="rounded-3xl border-2 border-[#c4b5fd] bg-white px-6 py-3 text-sm font-semibold text-brand-navy shadow-sm disabled:opacity-60 hover:bg-lavender-50"
       >
         {busy === "wish" ? "Saving…" : "Wishlist"}
       </button>

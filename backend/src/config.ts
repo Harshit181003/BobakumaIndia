@@ -13,8 +13,10 @@ const envSchema = z.object({
   /** Comma-separated list of allowed CORS origins (e.g. https://bobakuma.in,https://www.bobakuma.in). */
   CORS_ORIGINS: z.string().optional(),
 
-  MYSQL_HOST: z.string().default("localhost"),
-  MYSQL_PORT: z.string().default("3306"),
+  /** Prefer 127.0.0.1 over "localhost" on Windows (avoids IPv6 ::1 vs MySQL bind mismatch). */
+  MYSQL_HOST: z.string().default("127.0.0.1"),
+  /** Repo `docker-compose.yml` maps host 3307 → container 3306. */
+  MYSQL_PORT: z.string().default("3307"),
   MYSQL_DATABASE: z.string().default("bobakuma"),
   MYSQL_USER: z.string().default("bobakuma_user"),
   MYSQL_PASSWORD: z.string().default("bobakuma_password"),

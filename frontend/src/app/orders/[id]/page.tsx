@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { API, apiFetch, getAccessToken } from "@/lib/api";
+import { apiFetch, getAccessToken, getApiFetchUrl } from "@/lib/api";
 
 type OrderDetail = {
   id: number;
@@ -84,7 +84,7 @@ export default function OrderDetailPage() {
         className="mt-4 rounded-3xl border border-white/70 bg-white/80 px-4 py-2 text-sm font-semibold text-ink-900"
         onClick={async () => {
           const token = getAccessToken();
-          const res = await fetch(`${API}/api/orders/${order.id}/invoice`, {
+          const res = await fetch(getApiFetchUrl(`/orders/${order.id}/invoice`), {
             headers: token ? { Authorization: `Bearer ${token}` } : {}
           });
           const blob = await res.blob();

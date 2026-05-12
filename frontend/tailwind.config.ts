@@ -4,7 +4,27 @@ export default {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "Georgia", "serif"]
+      },
       colors: {
+        brand: {
+          navy: "#1e2a4a",
+          "navy-deep": "#141d33",
+          gold: "#b8954a",
+          "gold-light": "#d4bc7a",
+          /** Opal / sage — works on light + dark */
+          sage: "#5f8578",
+          sand: "#f0ebe4",
+          mist: "#e4ebe8",
+          opal: {
+            50: "#f4faf8",
+            100: "#e3f0ec",
+            800: "#1e2e2b",
+            900: "#141f1d"
+          }
+        },
         cream: {
           50: "#FFFDF8",
           100: "#FFF7E8"

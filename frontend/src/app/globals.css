@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
-:root {
-  --bg: #fffdf8;
-  --fg: #1b1b1f;
-}
+/* Class-based dark only (next-themes). Default v4 dark uses prefers-color-scheme and
+   ignored forced light — that made hero/guide/sizes render “dark” on OS dark mode. */
+@custom-variant dark (&:where(.dark, .dark *));
 
-.dark {
-  --bg: #141218;
-  --fg: #f4f1ff;
+:root {
+  --bg: #fdf6fb;
+  --fg: #2a2438;
+  color-scheme: light;
 }
 
 html,
@@ -16,21 +16,15 @@ body {
 }
 
 body {
-  background: radial-gradient(1200px 600px at 20% 0%, rgba(255, 107, 154, 0.16), transparent 60%),
-    radial-gradient(900px 500px at 90% 10%, rgba(138, 125, 255, 0.14), transparent 55%),
-    radial-gradient(700px 420px at 70% 100%, rgba(255, 138, 91, 0.12), transparent 55%),
+  background:
+    radial-gradient(900px 520px at 8% 0%, rgba(255, 182, 210, 0.28), transparent 55%),
+    radial-gradient(820px 480px at 92% 8%, rgba(186, 210, 255, 0.4), transparent 52%),
+    radial-gradient(760px 500px at 48% 100%, rgba(220, 200, 255, 0.32), transparent 58%),
+    radial-gradient(640px 400px at 70% 40%, rgba(180, 236, 255, 0.2), transparent 50%),
     var(--bg);
   color: var(--fg);
-}
-
-html.dark body {
-  background: radial-gradient(1000px 500px at 15% 0%, rgba(255, 107, 154, 0.12), transparent 55%),
-    radial-gradient(900px 520px at 90% 0%, rgba(138, 125, 255, 0.12), transparent 55%),
-    radial-gradient(800px 480px at 70% 100%, rgba(255, 138, 91, 0.1), transparent 55%),
-    var(--bg);
 }
 
 * {
   -webkit-tap-highlight-color: transparent;
 }
-

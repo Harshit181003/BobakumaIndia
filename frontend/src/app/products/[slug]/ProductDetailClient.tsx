@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
+import { ProductPhoto } from "@/components/media/ProductPhoto";
 import { PriceWithCurrencySelect } from "@/components/shop/PriceWithCurrencySelect";
 import type { MarketCurrency } from "@/lib/currency";
 
@@ -21,7 +21,7 @@ export function ProductMetaLine({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="mt-2 text-sm text-ink-900/60">
+    <div className="mt-2 text-sm text-stone-600">
       ★ {avgRating.toFixed(1)} ({reviewCount} {t("products.reviewsCount")}) · {category} · {inStock ? t("products.inStock") : t("products.outStock")}
     </div>
   );
@@ -49,22 +49,23 @@ export function ProductPriceBlock({
         <PriceWithCurrencySelect
           displayFormatted={displayPrice.formatted}
           serverCurrency={currency}
-          priceClassName="text-2xl font-bold text-ink-900"
+          priceClassName="text-2xl font-bold text-brand-navy"
         />
-        {discountPercent > 0 && <div className="text-sm text-ink-900/45 line-through">{preDiscount.formatted}</div>}
+        {discountPercent > 0 && <div className="text-sm font-medium text-stone-500 line-through">{preDiscount.formatted}</div>}
       </div>
-      <div className="mt-3 rounded-2xl border border-mint-100/70 bg-mint-50/40 px-3 py-2 text-xs text-ink-900/70">
-        <div className="font-semibold text-ink-900/80">{t("products.compareRegion")}</div>
+      <div className="mt-3 rounded-2xl border border-sky-200/80 bg-gradient-to-br from-sky-50 to-lavender-50 px-3 py-2 text-xs text-stone-800 shadow-sm">
+        <div className="font-semibold text-brand-navy">{t("products.compareRegion")}</div>
         <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
           <span>India: {subcontinent.IN.formatted}</span>
           <span>Nepal: {subcontinent.NP.formatted}</span>
           <span>Sri Lanka: {subcontinent.LK.formatted}</span>
         </div>
-        {pricingNote && currency !== "INR" && <p className="mt-2 text-[11px] text-ink-900/55">{pricingNote}</p>}
+        {pricingNote && currency !== "INR" && <p className="mt-2 text-[11px] text-stone-600">{pricingNote}</p>}
         {currency !== "INR" && (
-          <p className="mt-2 text-[11px] font-medium text-ink-900/65">
+          <p className="mt-2 text-[11px] font-medium text-stone-700">
             {t("products.checkoutChargesPrefix")}{" "}
-            <strong className="text-ink-900">{subcontinent.IN.formatted}</strong> {t("products.checkoutChargesSuffix")}
+            <strong className="text-brand-navy">{subcontinent.IN.formatted}</strong>{" "}
+            {t("products.checkoutChargesSuffix")}
           </p>
         )}
       </div>
@@ -84,17 +85,17 @@ export function ProductSpecsDl({
   const { t } = useTranslation();
   return (
     <dl className="mt-6 grid grid-cols-2 gap-3 text-sm">
-      <div className="rounded-2xl bg-white/60 p-3">
-        <dt className="text-xs font-bold uppercase tracking-wide text-ink-900/45">{t("products.material")}</dt>
-        <dd className="font-semibold text-ink-900">{material}</dd>
+      <div className="rounded-2xl border border-pink-200/50 bg-white p-3 shadow-sm">
+        <dt className="text-xs font-bold uppercase tracking-wide text-stone-500">{t("products.material")}</dt>
+        <dd className="font-semibold text-brand-navy">{material}</dd>
       </div>
-      <div className="rounded-2xl bg-white/60 p-3">
-        <dt className="text-xs font-bold uppercase tracking-wide text-ink-900/45">{t("products.color")}</dt>
-        <dd className="font-semibold text-ink-900">{color}</dd>
+      <div className="rounded-2xl border border-pink-200/50 bg-white p-3 shadow-sm">
+        <dt className="text-xs font-bold uppercase tracking-wide text-stone-500">{t("products.color")}</dt>
+        <dd className="font-semibold text-brand-navy">{color}</dd>
       </div>
-      <div className="rounded-2xl bg-white/60 p-3">
-        <dt className="text-xs font-bold uppercase tracking-wide text-ink-900/45">{t("products.capacity")}</dt>
-        <dd className="font-semibold text-ink-900">{capacityMl ? `${capacityMl} ml` : "—"}</dd>
+      <div className="rounded-2xl border border-pink-200/50 bg-white p-3 shadow-sm">
+        <dt className="text-xs font-bold uppercase tracking-wide text-stone-500">{t("products.capacity")}</dt>
+        <dd className="font-semibold text-brand-navy">{capacityMl ? `${capacityMl} ml` : "—"}</dd>
       </div>
     </dl>
   );
@@ -112,17 +113,20 @@ export function RelatedProductsSection({
   const { t } = useTranslation();
   return (
     <section className="mt-14">
-      <h2 className="text-xl font-semibold text-ink-900">{t("products.related")}</h2>
+      <h2 className="text-xl font-semibold text-brand-navy">{t("products.related")}</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((r) => (
-          <div key={r.id} className="overflow-hidden rounded-3xl border border-white/60 bg-white/60 shadow-sm">
+          <div
+            key={r.id}
+            className="overflow-hidden rounded-3xl border border-pink-200/40 bg-white shadow-sm"
+          >
             <Link href={`/products/${r.slug}${curQs}`} className="block">
-              <div className="relative aspect-square bg-cream-100">
-                {r.imageUrl ? <Image src={r.imageUrl} alt="" fill className="object-cover" sizes="200px" /> : null}
+              <div className="relative aspect-square overflow-hidden bg-[#faf8ff]">
+                <ProductPhoto src={r.imageUrl} alt={r.name} className="absolute inset-0 h-full w-full object-cover" />
               </div>
             </Link>
             <div className="p-3">
-              <Link href={`/products/${r.slug}${curQs}`} className="line-clamp-2 text-sm font-semibold text-ink-900 hover:underline">
+              <Link href={`/products/${r.slug}${curQs}`} className="line-clamp-2 text-sm font-semibold text-brand-navy hover:underline">
                 {r.name}
               </Link>
               <div className="mt-2">
@@ -147,14 +151,17 @@ export function ReviewsSection({
   const { t } = useTranslation();
   return (
     <section className="mt-14">
-      <h2 className="text-xl font-semibold text-ink-900">{t("products.reviews")}</h2>
+      <h2 className="text-xl font-semibold text-brand-navy">{t("products.reviews")}</h2>
       <div className="mt-4 space-y-3">
-        {reviews.length === 0 && <p className="text-sm text-ink-900/55">{t("products.noReviewsYet")}</p>}
+        {reviews.length === 0 && <p className="text-sm text-stone-500">{t("products.noReviewsYet")}</p>}
         {reviews.map((r) => (
-          <div key={r.id} className="rounded-3xl border border-white/60 bg-white/60 p-4">
-            <div className="text-xs font-bold text-ink-900/45">{r.userName}</div>
-            <div className="text-sm text-ink-900">★ {r.rating}</div>
-            {r.comment && <p className="mt-1 text-sm text-ink-900/75">{r.comment}</p>}
+          <div
+            key={r.id}
+            className="rounded-3xl border border-pink-200/40 bg-white p-4 shadow-sm"
+          >
+            <div className="text-xs font-bold text-stone-500">{r.userName}</div>
+            <div className="text-sm text-brand-navy">★ {r.rating}</div>
+            {r.comment && <p className="mt-1 text-sm text-stone-600">{r.comment}</p>}
           </div>
         ))}
       </div>

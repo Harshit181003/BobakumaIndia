@@ -1,8 +1,9 @@
 import { Suspense } from "react";
 import { parseDisplayCurrency, type MarketCurrency } from "@/lib/currency";
 import { getCurrencyFromCookies } from "@/lib/currency.server";
+import { getServerApiBase } from "@/lib/serverApiBase";
 import { ProductsLead, ProductsFilters, ProductsFooter } from "./ProductsChrome";
-import { ProductsGrid, type GridItem } from "./ProductsGrid";
+import { ProductsGrid, ProductsGridSkeleton, type GridItem } from "./ProductsGrid";
 
 type ListRes = {
   items: GridItem[];
@@ -40,16 +41,15 @@ export default async function ProductsPage({
   const sp = await searchParams;
   const currency: MarketCurrency = sp.currency ? parseDisplayCurrency(sp.currency) : await getCurrencyFromCookies();
   const qs = buildQuery(sp);
-  const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000";
-  const res = await fetch(`${base}/api/products?${qs}`, { next: { revalidate: 15 } });
+  const base = getServerApiBase();
+  const res = await fetch(`${base}/api/products?${qs}`, { cache: "no-store" });
   const data = res.ok ? ((await res.json()) as ListRes) : { items: [], total: 0, page: 1, pageSize: 12 };
   const curQs = currency !== "INR" ? `?currency=${currency}` : "";
-
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
       <ProductsLead pricingNote={data.pricingNote} currency={currency} />
       <ProductsFilters sp={sp} currency={currency} />
-      <Suspense fallback={<div className="mt-8 text-center text-sm text-ink-900/50">Loading…</div>}>
+      <Suspense fallback={<ProductsGridSkeleton />}>
         <ProductsGrid items={data.items} currency={currency} curQs={curQs} />
       </Suspense>
       <ProductsFooter shown={data.items.length} total={data.total} pageNum={data.page} />

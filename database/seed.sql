@@ -178,18 +178,18 @@ JOIN (
          2
   UNION ALL
   SELECT 'office-zen-steel-lunchbox',
-         'https://images.unsplash.com/photo-1524594081293-190a2fe0baae?auto=format&fit=crop&w=1200&q=80',
-         'Steel lunchbox (premium office)',
+         'https://images.unsplash.com/photo-1587734193613-12eaf7e0e4d1?auto=format&fit=crop&w=1200&q=80',
+         'Stacked bento lunchbox (office line)',
          0
   UNION ALL
   SELECT 'office-zen-steel-lunchbox',
-         'https://images.unsplash.com/photo-1526318896980-cf78c088247c?auto=format&fit=crop&w=1200&q=80',
-         'Metal food container flat lay',
+         'https://images.unsplash.com/photo-1590080876204-c311287998e7?auto=format&fit=crop&w=1200&q=80',
+         'Steel tiffin-style lunch stack',
          1
   UNION ALL
   SELECT 'office-zen-steel-lunchbox',
-         'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80',
-         'Lunch spread with containers',
+         'https://images.unsplash.com/photo-1615485920415-680443d9688c?auto=format&fit=crop&w=1200&q=80',
+         'Minimal meal containers on wood',
          2
   UNION ALL
   SELECT 'peach-pop-mini-tiffin',
@@ -228,8 +228,8 @@ JOIN (
          0
   UNION ALL
   SELECT 'bobakuma-mint-graphic-tee',
-         'https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=1200&q=80',
-         'Pastel t-shirts on hanger',
+         'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=1200&q=80',
+         'Folded cotton tees (pastel)',
          1
   UNION ALL
   SELECT 'pastel-boba-pocket-tee',
